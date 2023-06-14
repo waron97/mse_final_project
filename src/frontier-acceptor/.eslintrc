@@ -1,0 +1,7 @@
+{
+  "extends": ["universe", "universe/node"],
+  "rules": {
+    "no-console": "warn",
+    "import/order": "off"
+  }
+}

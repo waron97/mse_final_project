@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:15
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  
+  frontier-acceptor:
+    build: ./frontier-acceptor
+    container_name: frontier-acceptor
+    restart: always
+    ports:
+      - "8080:3000"
+    command: "yarn start"
+    networks:
+      - app-network
+    depends_on:
+      - db
+  
+  crawler:
+    build: ./crawler
+    container_name: crawler
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - frontier-acceptor
+    
+
+networks:
+  app-network:
+    driver: bridge
