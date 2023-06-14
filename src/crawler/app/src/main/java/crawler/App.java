@@ -4,7 +4,9 @@
 package crawler;
 
 public class App {
+
     public String getGreeting() {
+        Util util = new Util();
         return "Hello World!";
     }
 

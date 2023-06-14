@@ -24,7 +24,7 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
 
     implementation 'org.jsoup:jsoup:1.16.1'
-    implementation(files('deps/postgresql-42.6.0.jar'))
+    implementation(files('dependencies/postgresql-42.6.0.jar'))
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
