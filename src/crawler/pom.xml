@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.release>20</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
     <start-class>
       com.mycompany.app.App
     </start-class>
@@ -29,6 +29,12 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- jsoup HTML parser library @ https://jsoup.org/ -->
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.16.1</version>
     </dependency>
   </dependencies>
 
