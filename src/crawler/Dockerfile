@@ -5,5 +5,5 @@ RUN mvn clean package
 
 FROM openjdk:17
 WORKDIR /app
-COPY --from=build /app/target/*.jar /app/app.jar
+COPY --from=build /app/target/crawler-1.0-jar-with-dependencies.jar /app/app.jar
 CMD ["java", "-jar", "app.jar"]

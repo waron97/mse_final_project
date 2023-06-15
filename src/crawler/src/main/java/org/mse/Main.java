@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Integer numThreads = 10;
         List<Thread> threads = new ArrayList<>();
-        Frontier frontier = new Frontier("");
+        Frontier frontier = new Frontier(Constants.frontierUrl);
 
         for (Integer i = 0; i < numThreads; i++) {
             Thread t = new Thread(new Spider(frontier.pop()));
