@@ -13,7 +13,7 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     networks:
       - app-network
-  
+
   frontier-acceptor:
     build: ./frontier-acceptor
     container_name: frontier-acceptor
@@ -25,16 +25,14 @@ services:
       - app-network
     depends_on:
       - db
-  
+
   crawler:
     build: ./crawler
     container_name: crawler
-    restart: never
     networks:
       - app-network
     depends_on:
       - frontier-acceptor
-    
 
 networks:
   app-network:

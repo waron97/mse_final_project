@@ -1,7 +1,10 @@
 FROM maven:3.9.2-eclipse-temurin-17 as build
 WORKDIR /app
+COPY pom.xml pom.xml
+RUN mvn dependency:resolve
+RUN mvn install
 COPY . .
-RUN mvn clean package
+RUN mvn package
 
 FROM openjdk:17
 WORKDIR /app
