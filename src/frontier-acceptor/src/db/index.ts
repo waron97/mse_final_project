@@ -12,6 +12,6 @@ export function query<T>(text: string, params: Params): Promise<T[]> {
   return pool.query(text, params).then((res) => res.rows);
 }
 
-export function queryOne<T>(text: string, params: Params): Promise<T> {
-  return pool.query(text, params).then((res) => res.rows[0]);
+export function queryOne<T>(text: string, params: Params): Promise<T | null> {
+  return pool.query(text, params).then((res) => res.rows[0] || null);
 }
