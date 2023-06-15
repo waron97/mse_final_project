@@ -9,7 +9,8 @@ async function initDb() {
   initFrontier();
 }
 
-export default function startServer() {
+export default async function startServer() {
+  await initDb();
   const app = express();
   app.use(bodyParser.json());
   app.use(cors({ origin: "*" }));
@@ -17,8 +18,6 @@ export default function startServer() {
   app.get("/", (_, res) => res.send("ok"));
 
   app.use("/frontier", frontierRouter);
-
-  initDb();
 
   app.listen(3000, () => {
     // eslint-disable-next-line
