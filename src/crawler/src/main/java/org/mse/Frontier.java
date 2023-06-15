@@ -18,12 +18,22 @@ public class Frontier {
     }
 
     public String pop() {
-        Request request = new Request.Builder().url(this.location).build();
+        String url = this.location + "/frontier";
+        Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
             String body = response.body().string();
             return body;
         } catch (IOException e) {
             return null;
+        }
+    }
+
+    public Boolean isAlive() {
+        Request request = new Request.Builder().url(this.location).build();
+        try (Response response = client.newCall(request).execute()) {
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 }

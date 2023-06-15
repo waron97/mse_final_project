@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Integer numThreads = 10;
         List<Thread> threads = new ArrayList<>();
         Frontier frontier = new Frontier(Constants.frontierUrl);
+
+        while (!frontier.isAlive()) {
+            Thread.sleep(100);
+        }
 
         for (Integer i = 0; i < numThreads; i++) {
             Thread t = new Thread(new Spider(frontier.pop()));
