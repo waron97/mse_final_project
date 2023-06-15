@@ -29,7 +29,7 @@ services:
   crawler:
     build: ./crawler
     container_name: crawler
-    restart: always
+    restart: never
     networks:
       - app-network
     depends_on:
