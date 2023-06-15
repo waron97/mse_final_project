@@ -13,15 +13,23 @@ const createCommand = `
 
 const initialPages = [
   {
-    url: "https://www.google.com",
+    url: "https://www.tuebingen.de/",
     priority: 1,
   },
   {
-    url: "https://www.facebook.com",
+    url: "https://www.tuebingen-info.de/",
     priority: 1,
   },
   {
-    url: "https://www.twitter.com",
+    url: "https://de.wikipedia.org/wiki/T%C3%BCbingen",
+    priority: 1,
+  },
+  {
+    url: "https://uni-tuebingen.de/",
+    priority: 1,
+  },
+  {
+    url: "https://www.kreis-tuebingen.de/Startseite.html",
     priority: 1,
   },
 ];
