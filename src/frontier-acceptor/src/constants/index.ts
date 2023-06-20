@@ -1,1 +1,2 @@
-export const pgConnString = "postgres://postgres:postgres@db:5432/postgres";
+export const mongoConnectionString = "mongodb://db:27017";
+export const mongoDbName = "mse";

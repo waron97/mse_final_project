@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="600d84f7-0fa0-46b1-bf17-ee3fe127470e" name="Changes" comment="Docker">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Frontier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Frontier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Robots.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Robots.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Spider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Spider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Util.java" afterDir="false" />
-    </list>
+    <list default="true" id="600d84f7-0fa0-46b1-bf17-ee3fe127470e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
