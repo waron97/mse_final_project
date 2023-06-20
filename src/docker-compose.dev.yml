@@ -1,6 +1,6 @@
 services:
   db:
-    image: mongo:lts
+    image: mongo:6
     container_name: db
     restart: always
     ports:
