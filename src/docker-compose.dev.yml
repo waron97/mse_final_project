@@ -9,6 +9,7 @@ services:
       - app-network
     volumes:
       - ./mongodata:/data/db
+    command: --logpath /dev/null
 
   frontier-acceptor:
     build: ./frontier-acceptor
