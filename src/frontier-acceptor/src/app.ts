@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 
+import acceptorRouter from "./api/acceptor";
 import frontierRouter from "./api/frontier";
 import initFrontier from "./api/frontier/initFrontier";
 
@@ -12,12 +13,13 @@ async function initDb() {
 export default async function startServer() {
   await initDb();
   const app = express();
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ limit: "50mb" }));
   app.use(cors({ origin: "*" }));
 
   app.get("/", (_, res) => res.send("ok"));
 
   app.use("/frontier", frontierRouter);
+  app.use("/acceptor", acceptorRouter);
 
   app.listen(3000, () => {
     // eslint-disable-next-line
