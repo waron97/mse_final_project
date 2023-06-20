@@ -15,9 +15,14 @@ export const get: RequestHandler = async (req, res, next) => {
       throw new Error("No items in frontier");
     }
 
-    await FrontierCollection.updateOne(item._id, {
-      $set: { priority: lastItem.priority + 1 },
-    });
+    await FrontierCollection.updateOne(
+      { _id: item._id },
+      {
+        $set: {
+          priority: lastItem.priority + 1,
+        },
+      }
+    );
 
     res.send(item.url);
   } catch (err) {
