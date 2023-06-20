@@ -5,6 +5,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HtmlExtractor {
@@ -28,6 +29,38 @@ public class HtmlExtractor {
             links.add(new AnchorTag(text, href));
         }
         return links;
+    }
+
+    static String getBodyText(Document doc) {
+        return doc.select("body").first().text();
+    }
+
+    static String getMainText(Document doc) {
+        Elements element = doc.select("main");
+        if (!element.isEmpty()) {
+            element.first().text();
+        }
+        return "";
+    }
+
+    static String getDescription(Document doc) {
+        Elements elements = doc.select("meta[name='description']");
+        if (elements.isEmpty()) {
+            return "";
+        }
+        return elements.first().attr("content");
+    }
+
+    static List<String> getKeywords(Document doc) {
+        Elements elements = doc.select("meta[name='keywords']");
+        if (elements.isEmpty()) {
+            return new ArrayList<>();
+        }
+        String content = elements.first().attr("content");
+        return Arrays.asList(content.split(","))
+                .stream()
+                .map(item -> item.strip())
+                .toList();
     }
 
 
