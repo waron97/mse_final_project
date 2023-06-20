@@ -9,7 +9,10 @@ export const create: RequestHandler = async (req, res, next) => {
     const date = new Date();
     const found = await crawlCollection.findOne({ url });
     if (found) {
-      await crawlCollection.updateOne({ url }, { $set: { ...body, date } });
+      await crawlCollection.updateOne(
+        { _id: found._id },
+        { $set: { ...body, date } }
+      );
     } else {
       await crawlCollection.insertOne({ ...body, date });
     }
