@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="600d84f7-0fa0-46b1-bf17-ee3fe127470e" name="Changes" comment="" />
+    <list default="true" id="600d84f7-0fa0-46b1-bf17-ee3fe127470e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/HtmlExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/HtmlExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mse/Spider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mse/Spider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontier-acceptor/src/api/frontier/controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontier-acceptor/src/api/frontier/controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontier-acceptor/src/db/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontier-acceptor/src/db/index.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,12 +36,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
