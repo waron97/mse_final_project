@@ -18,20 +18,28 @@ public class Spider implements Runnable {
 
     public Spider (String url) {
         this.initialUrl = url;
-
     }
 
     @Override
     public void run() {
         System.out.println("Thread starting with url " + this.initialUrl);
         processPage(this.initialUrl);
+        while (!next.isEmpty()) {
+            String nextPage = next.remove(0);
+            Boolean isLegal = Util.isLegalUrl(nextPage);
+            if (visited.contains(nextPage) || !Util.isLegalUrl(nextPage)) {
+                continue;
+            }
+            processPage(nextPage);
+        }
     }
 
     private void processPage(String url) {
-        Robots robots = Util.getRobots(this.initialUrl);
+        System.out.println("[" + Thread.currentThread().getName() + "] starting on " + url);
+        Robots robots = Util.getRobots(url);
         String absoluteUrl = Util.getBaseUrl(url);
         try {
-            Document doc = Jsoup.connect(this.initialUrl).get();
+            Document doc = Jsoup.connect(url).get();
             String title = HtmlExtractor.getPageTitle(doc);
             List<AnchorTag> tags = HtmlExtractor.getLinks(doc, absoluteUrl);
             String bodyText = HtmlExtractor.getBodyText(doc);
@@ -41,7 +49,7 @@ public class Spider implements Runnable {
             String rawHtml = doc.html();
 
             sendCrawl(
-                    absoluteUrl,
+                    url,
                     title,
                     tags,
                     bodyText,
@@ -49,6 +57,14 @@ public class Spider implements Runnable {
                     description,
                     keywords,
                     rawHtml
+            );
+
+            next.addAll(
+                    tags.stream()
+                            .map(a -> a.getHref())
+                            .filter(a -> !this.next.contains(a))
+                            .filter(a -> !this.visited.contains(a))
+                            .toList()
             );
 
         } catch (IOException e) {

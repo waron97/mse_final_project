@@ -11,6 +11,20 @@ import java.net.URL;
 public class Util {
     static void loadPageHtml() {}
 
+    static boolean isLegalUrl(String url) {
+        if (url == null) {
+            return false;
+        }
+        try {
+            URL asUrl = new URL(url);
+            String protocol = asUrl.getProtocol();
+            return protocol.equals("http")  || protocol.equals("https");
+        } catch (MalformedURLException e) {
+            return false;
+        }
+
+    }
+
     static Robots getRobots(String url) {
         if (url == null) {
             return new Robots(null);
