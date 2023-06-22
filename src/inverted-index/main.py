@@ -2,7 +2,9 @@ from flask import Flask
 from flask_cors import CORS
 from app.api.blueprint import api_blueprint
 from app.util.db import get_crawl_pages
+from app.util.setup_jobs import setup_jobs
 
+setup_jobs()
 
 app = Flask(__name__)
 CORS(app)
