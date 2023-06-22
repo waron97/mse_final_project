@@ -23,13 +23,13 @@ services:
     depends_on:
       - db
 
-  # crawler:
-  #   build: ./crawler
-  #   container_name: crawler
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - frontier-acceptor
+  crawler:
+    build: ./crawler
+    container_name: crawler
+    networks:
+      - app-network
+    depends_on:
+      - frontier-acceptor
 
   inverted-index:
     build: ./inverted-index
