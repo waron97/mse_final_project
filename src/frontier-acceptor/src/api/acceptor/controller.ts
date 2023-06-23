@@ -21,3 +21,14 @@ export const create: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const get: RequestHandler = async (req, res, next) => {
+  let { url } = req.params;
+  url = decodeURIComponent(url);
+  const item = await crawlCollection.findOne({ url });
+  if (item) {
+    res.status(200).json(item);
+  } else {
+    res.status(404).send();
+  }
+};

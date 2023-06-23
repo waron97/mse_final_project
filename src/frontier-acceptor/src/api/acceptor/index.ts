@@ -1,8 +1,9 @@
 import { Router } from "express";
 
-import { create } from "./controller";
+import { create, get } from "./controller";
 
 const acceptorRouter = Router();
 acceptorRouter.post("/", create);
+acceptorRouter.get("/:url", get);
 
 export default acceptorRouter;
