@@ -5,6 +5,17 @@ import java.util.List;
 public class CrawlResult {
     private String url;
     private String title;
+
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     private List<AnchorTag> links;
     private String bodyText;
     private String mainText;
@@ -38,6 +49,7 @@ public class CrawlResult {
         this.description = description;
         this.keywords = keywords;
         this.rawHtml = rawHtml;
+
     }
 
     public List<AnchorTag> getLinks() {

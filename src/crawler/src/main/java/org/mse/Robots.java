@@ -49,7 +49,25 @@ public class Robots {
     }
 
     public Boolean canCrawl(String url) {
+        Boolean inAllowed = checkPattern(url, allowPatterns);
+        Boolean inDisallowed = checkPattern(url, disallowPatterns);
+        if (inAllowed) {
+            return true;
+        } else if (inDisallowed) {
+            return false;
+        }
         return true;
+    }
+
+    private Boolean checkPattern(String url, List<String> patterns) {
+        Boolean inPattern = false;
+        for (String pat: patterns) {
+               if (pat.equals(url)) {
+                   inPattern = true;
+                   break;
+               }
+        }
+        return inPattern;
     }
 
 }
