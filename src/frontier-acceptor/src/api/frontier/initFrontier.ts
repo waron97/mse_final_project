@@ -7,19 +7,19 @@ const initialPages = [
   },
   {
     url: "https://www.tuebingen-info.de/",
-    priority: 1,
+    priority: 2,
   },
   {
     url: "https://de.wikipedia.org/wiki/T%C3%BCbingen",
-    priority: 1,
+    priority: 3,
   },
   {
     url: "https://uni-tuebingen.de/",
-    priority: 1,
+    priority: 4,
   },
   {
     url: "https://www.kreis-tuebingen.de/Startseite.html",
-    priority: 1,
+    priority: 5,
   },
 ];
 
