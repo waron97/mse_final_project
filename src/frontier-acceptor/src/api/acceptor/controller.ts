@@ -6,15 +6,15 @@ export const create: RequestHandler = async (req, res, next) => {
   try {
     const { body } = req;
     const { url } = body;
-    const date = new Date();
+    const crawlDate = new Date();
     const found = await crawlCollection.findOne({ url });
     if (found) {
       await crawlCollection.updateOne(
         { _id: found._id },
-        { $set: { ...body, date } }
+        { $set: { ...body, crawlDate } }
       );
     } else {
-      await crawlCollection.insertOne({ ...body, date });
+      await crawlCollection.insertOne({ ...body, crawlDate });
     }
     res.status(201).send();
   } catch (error) {

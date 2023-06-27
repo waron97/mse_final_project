@@ -6,15 +6,11 @@ public class CrawlResult {
     private String url;
     private String title;
 
-    private String date;
+    private String crawlDate;
 
-    public String getDate() {
-        return date;
-    }
+    private String indexedDate;
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+
 
     private List<AnchorTag> links;
     private String bodyText;
@@ -24,13 +20,7 @@ public class CrawlResult {
 
     private String rawHtml;
 
-    public String getRawHtml() {
-        return rawHtml;
-    }
 
-    public void setRawHtml(String rawHtml) {
-        this.rawHtml = rawHtml;
-    }
 
     public CrawlResult(String url,
                        String title,
@@ -50,6 +40,23 @@ public class CrawlResult {
         this.keywords = keywords;
         this.rawHtml = rawHtml;
 
+    }
+
+    public String getRawHtml() {
+        return rawHtml;
+    }
+
+    public void setRawHtml(String rawHtml) {
+        this.rawHtml = rawHtml;
+    }
+
+
+    public String getCrawlDate() {
+        return crawlDate;
+    }
+
+    public void setCrawlDate(String crawlDate) {
+        this.crawlDate = crawlDate;
     }
 
     public List<AnchorTag> getLinks() {
@@ -106,5 +113,13 @@ public class CrawlResult {
 
     public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
+    }
+
+    public String getIndexedDate() {
+        return indexedDate;
+    }
+
+    public void setIndexedDate(String indexedDate) {
+        this.indexedDate = indexedDate;
     }
 }

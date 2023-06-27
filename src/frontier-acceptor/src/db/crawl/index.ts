@@ -10,7 +10,8 @@ export type Crawl = {
   rawHtml: string;
   bodyTextContent: string;
   mainTextContent: string;
-  date: Date;
+  crawlDate: Date;
+  indexedDate: Date;
   links: { text: string; href: string }[];
 };
 
