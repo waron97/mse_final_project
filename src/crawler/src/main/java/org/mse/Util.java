@@ -31,7 +31,13 @@ public class Util {
         }
 
         OkHttpClient client = new OkHttpClient();
-        Request req = new Request.Builder().url(url + "/robots.txt").build();
+
+        Request req = null;
+        try {
+            req = new Request.Builder().url(url + "/robots.txt").build();
+        } catch (Exception exception) {
+            return new Robots(null);
+        }
         try (Response res = client.newCall(req).execute()) {
             return new Robots(res.body().string());
         } catch (IOException e) {
