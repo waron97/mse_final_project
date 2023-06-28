@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	go util.GetCrawlPage()
 	fmt.Println(util.GetCrawlPage())
 
 }

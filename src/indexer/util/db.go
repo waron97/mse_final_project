@@ -2,28 +2,29 @@ package util
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type PageCrawl struct {
-	url         string
-	title       string
-	bodyText    string
-	mainText    string
-	description string
-	rawHtml     string
-	crawlDate   string
-	indexedDate string
+	ID          primitive.ObjectID `bson:"_id,omitempty"`
+	URL         string             `bson:"url"`
+	Title       string             `bson:"title"`
+	BodyText    string             `bson:"bodyText"`
+	MainText    string             `bson:"mainText"`
+	Description string             `bson:"description"`
+	RawHtml     string             `bson:"rawHtml"`
+	CrawlDate   primitive.DateTime `bson:"crawlDate"`
+	IndexedDate primitive.DateTime `bson:"indexedDate"`
 }
 
 func (page PageCrawl) String() string {
-	return fmt.Sprintf("url: %s, title: %s", page.url, page.title)
+	return fmt.Sprintf("url: %s, title: %s", page.URL, page.Title)
 }
 
 func getClient() *mongo.Client {
@@ -49,6 +50,7 @@ func GetCrawlPage() string {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(json.MarshalIndent(result, "", "  "))
+
+	fmt.Printf("%s\n", result.String())
 	return "function executed in go"
 }
