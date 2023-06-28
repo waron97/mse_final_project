@@ -42,6 +42,17 @@ services:
       - ./bert/out:/usr/app/out:rw
     ports:
       - "8081:5000"
+  
+  indexer:
+    build: ./indexer
+    container_name: indexer
+    networks:
+      - app-network
+    depends_on:
+      - bert
+      - db
+    volumes:
+      - ./offline-index:/go/src/app/offline-index:rw
 
 networks:
   app-network:
