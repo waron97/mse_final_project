@@ -32,14 +32,14 @@ services:
     depends_on:
       - frontier-acceptor
 
-  inverted-index:
-    build: ./inverted-index
-    container_name: inverted-index
+  bert:
+    build: ./bert
+    container_name: bert
     networks:
       - app-network
     volumes:
-      - ./inverted-index/app:/usr/app/app:ro
-      - ./inverted-index/out:/usr/app/out:rw
+      - ./bert/app:/usr/app/app:ro
+      - ./bert/out:/usr/app/out:rw
     ports:
       - "8081:5000"
 
