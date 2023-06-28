@@ -55,6 +55,18 @@ services:
       - ./offline-index:/go/src/app/offline-index:rw
       - ./indexer/src:/go/src/app/src:ro
 
+  ranker:
+    build: ./ranker
+    container_name: ranker
+    networks:
+      - app-network
+    depends_on:
+      - bert
+      - db
+    volumes:
+      - ./offline-index:/go/src/app/offline-index:rw
+      - ./ranker/src:/go/src/app/src:ro
+
 networks:
   app-network:
     driver: bridge
