@@ -42,6 +42,9 @@ services:
       - ./bert/out:/usr/app/out:rw
     ports:
       - "8081:5000"
+    environment:
+      - BERT_MODEL=bert-base-uncased
+      - MAX_QUERY_SIZE=50
   
   indexer:
     build: ./indexer
