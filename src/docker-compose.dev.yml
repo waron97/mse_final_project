@@ -53,6 +53,7 @@ services:
       - db
     volumes:
       - ./offline-index:/go/src/app/offline-index:rw
+      - ./indexer/src:/go/src/app/src:ro
 
 networks:
   app-network:

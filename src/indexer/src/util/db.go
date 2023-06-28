@@ -39,12 +39,12 @@ func getClient() *mongo.Client {
 	return client
 }
 
-func GetCrawlPage() string {
+func GetCrawlPage() PageCrawl {
 	// https://www.mongodb.com/docs/drivers/go/current/usage-examples/findOne/
 	client := getClient()
 	collection := client.Database("mse").Collection("crawl")
 	var result PageCrawl
-	filter := bson.D{{"url", "https://www.tuebingen.de/"}}
+	filter := bson.D{{Key: "url", Value: "https://www.tuebingen.de/"}}
 	ctx := context.TODO()
 	err := collection.FindOne(ctx, filter).Decode(&result)
 	if err != nil {
@@ -52,5 +52,5 @@ func GetCrawlPage() string {
 	}
 
 	fmt.Printf("%s\n", result.String())
-	return "function executed in go"
+	return result
 }
