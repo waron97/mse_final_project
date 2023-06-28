@@ -23,12 +23,21 @@ export const create: RequestHandler = async (req, res, next) => {
 };
 
 export const get: RequestHandler = async (req, res, next) => {
-  let { url } = req.params;
-  url = decodeURIComponent(url);
-  const item = await crawlCollection.findOne({ url });
-  if (item) {
-    res.status(200).json(item);
-  } else {
-    res.status(404).send();
+  try {
+    let { url } = req.params;
+    url = decodeURIComponent(url);
+    const item = await crawlCollection.findOne({ url });
+    if (item) {
+      res.status(200).json(item);
+    } else {
+      res.status(404).send();
+    }
+  } catch (e) {
+    if (e instanceof URIError) {
+      res.status(404).send();
+      // eslint-disable-next-line
+      console.log("maflormed url requested", req.params.url);
+    }
+    next(e);
   }
 };
