@@ -25,6 +25,14 @@ const initialPages = [
     url: "https://www.neckarcamping.de/",
     priority: 6,
   },
+  {
+    url: "https://www.tuemarkt.de/",
+    priority: 7,
+  },
+  {
+    url: "https://www.swtue.de/",
+    priority: 8,
+  },
 ];
 
 export default async function initFrontier() {
