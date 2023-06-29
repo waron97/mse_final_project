@@ -29,7 +29,6 @@ setImmediate(() => {
 
 app.listen(appEnv.port, () => {
   // eslint-disable-next-line
-  console.log(`Logs service listening on port ${appEnv.port}`);
 });
 
 export default app;
