@@ -83,6 +83,7 @@ services:
       - MAX_QUERY_SIZE=50
       - LOGS_APP_NAME=bert
       - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
   
   indexer:
     build: ./indexer
