@@ -21,6 +21,10 @@ const initialPages = [
     url: "https://www.kreis-tuebingen.de/Startseite.html",
     priority: 5,
   },
+  {
+    url: "https://www.neckarcamping.de/",
+    priority: 6,
+  },
 ];
 
 export default async function initFrontier() {
