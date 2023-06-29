@@ -1,0 +1,4 @@
+node_modules
+build
+static/assets
+static/ui

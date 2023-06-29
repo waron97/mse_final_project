@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ES2020",
+    "jsx": "react",
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./build",
+    "typeRoots": ["./types"]
+  },
+  "exclude": ["node_modules", "**/node_modules/*"],
+  "ts-node": {
+    "files": true
+  }
+}

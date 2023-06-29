@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "universe/node",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-console": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "radix": "off",
+    "@typescript-eslint/no-namespace": "off"
+  }
+}

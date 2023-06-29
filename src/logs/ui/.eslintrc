@@ -1,0 +1,15 @@
+{
+    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "plugins": ["react"],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "env": { "browser": true },
+    "rules": {
+        "no-console": "warn",
+        "react/prop-types": "warn",
+        "no-unused-vars": "warn"
+    }
+}

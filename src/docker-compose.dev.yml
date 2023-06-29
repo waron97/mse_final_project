@@ -1,4 +1,31 @@
 services:
+
+  logs:
+    build: logs
+    container_name: logs
+    depends_on:
+      - db
+    networks:
+      - app-network
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./logs/src:/usr/app/src:rw
+      - ./logs/static:/usr/app/static:rw
+    environment:
+      - MONGO_URI=${MONGO_URI_LOGS}
+      - APP_PORT=8080
+      - DEFAULT_ADMIN_KEY=${LOGS_DEFAULT_ADMIN_KEY}
+      - DEFAULT_READONLY_KEY=${LOGS_DEFAULT_READONLY_KEY}
+      - DEFAULT_WRITEONLY_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - LIFETIME_DAYS_DEBUG=${LOGS_LIFETIME_DAYS_DEBUG}
+      - LIFETIME_DAYS_INFO=${LOGS_LIFETIME_DAYS_INFO}
+      - LIFETIME_DAYS_WARNING=${LOGS_LIFETIME_DAYS_WARNING}
+      - LIFETIME_DAYS_ERROR=${LOGS_LIFETIME_DAYS_ERROR}
+      - LIFETIME_DAYS_CRITICAL=${LOGS_LIFETIME_DAYS_CRITICAL}
+      - APP_ENV=${APP_ENV}
+    command: "yarn run dev"
+
   db:
     image: mongo:6
     container_name: db
@@ -23,6 +50,9 @@ services:
       - db
     volumes:
       - ./frontier-acceptor/src:/usr/app/src:ro
+    environment:
+      - LOGS_APP_NAME=frontier-acceptor
+      - APP_ENV=${APP_ENV}
 
   crawler:
     build: ./crawler
@@ -31,6 +61,10 @@ services:
       - app-network
     depends_on:
       - frontier-acceptor
+    environment:
+      - LOGS_APP_NAME=crawler
+      - APP_ENV=${APP_ENV}
+
 
   bert:
     build: ./bert
@@ -45,6 +79,8 @@ services:
     environment:
       - BERT_MODEL=bert-base-uncased
       - MAX_QUERY_SIZE=50
+      - LOGS_APP_NAME=bert
+      - APP_ENV=${APP_ENV}
   
   indexer:
     build: ./indexer
@@ -57,6 +93,9 @@ services:
     volumes:
       - ./offline-index:/go/src/app/offline-index:rw
       - ./indexer/src:/go/src/app/src:ro
+    environment:
+      - LOGS_APP_NAME=indexer
+      - APP_ENV=${APP_ENV}
 
   ranker:
     build: ./ranker
@@ -69,6 +108,9 @@ services:
     volumes:
       - ./offline-index:/go/src/app/offline-index:rw
       - ./ranker/src:/go/src/app/src:ro
+    environment:
+      - LOGS_APP_NAME=ranker
+      - APP_ENV=${APP_ENV}
 
 networks:
   app-network:
