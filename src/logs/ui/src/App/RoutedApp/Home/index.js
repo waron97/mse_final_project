@@ -2,7 +2,8 @@ import PropTypes from 'prop-types'
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import Filters, { LogLevels } from './components/Filters'
+import { useLogFilters } from '../../_shared/stores'
+import Filters from './components/Filters'
 import LogDrawer from './components/LogDrawer'
 import Terminal from './components/Terminal'
 import useLogs from './hooks/useLogs'
@@ -22,10 +23,7 @@ function _Home(props) {
 
     const [selectedLogId, setSelectedLogId] = useState()
 
-    const [filters, setFilters] = useState({
-        appId: undefined,
-        levels: LogLevels.map((l) => l.value),
-    })
+    const { filters, setFilters } = useLogFilters()
 
     const [logs, loadNextPage] = useLogs(filters)
 
