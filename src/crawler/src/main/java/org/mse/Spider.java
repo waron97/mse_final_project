@@ -32,6 +32,9 @@ public class Spider implements Runnable {
     }
 
     private void startOnPage(String url) {
+        System.out.println(
+                "[Spider " + Thread.currentThread().getName() + "] starting on URL " + url
+        );
         processPage(url);
         while (!next.isEmpty()) {
             String nextPage = next.remove(0);
