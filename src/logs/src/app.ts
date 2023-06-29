@@ -19,7 +19,7 @@ const app = express();
 app.use(express.static('static'));
 app.use(express.static('frontend'));
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(appRouter);
 
 setImmediate(() => {
