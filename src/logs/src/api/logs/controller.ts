@@ -27,30 +27,12 @@ export const create: RequestHandler = (req, res, next) => {
 
 export const getAppIds: RequestHandler = async (req, res, next) => {
   try {
-    const first = await Log.findOne({});
-
-    if (!first) {
-      res.send([]);
-      return;
+    const docs = await Log.distinct('appId');
+    if (docs && docs.length) {
+      req?.registerCachedContent?.(docs);
+      return res.send(docs);
     }
-
-    const ids = [first?.appId];
-    let foundResult = true;
-
-    while (foundResult) {
-      const nextLog = await Log.findOne({ appId: { $nin: ids } });
-
-      if (nextLog) {
-        foundResult = true;
-        ids.push(nextLog.appId);
-      } else {
-        foundResult = false;
-      }
-    }
-
-    req.registerCachedContent?.(ids);
-
-    res.send(ids);
+    res.send([]);
   } catch (e) {
     next(e);
   }
