@@ -53,6 +53,7 @@ services:
     environment:
       - LOGS_APP_NAME=frontier-acceptor
       - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
   crawler:
     build: ./crawler
@@ -64,6 +65,7 @@ services:
     environment:
       - LOGS_APP_NAME=crawler
       - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
 
   bert:
@@ -96,6 +98,7 @@ services:
     environment:
       - LOGS_APP_NAME=indexer
       - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
   ranker:
     build: ./ranker
@@ -111,6 +114,7 @@ services:
     environment:
       - LOGS_APP_NAME=ranker
       - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
 networks:
   app-network:

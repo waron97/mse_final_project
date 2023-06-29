@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 
 import { crawlCollection } from "../../db/crawl";
+import Log from "../../util/logs";
 
 export const create: RequestHandler = async (req, res, next) => {
   try {
@@ -9,15 +10,18 @@ export const create: RequestHandler = async (req, res, next) => {
     const crawlDate = new Date();
     const found = await crawlCollection.findOne({ url });
     if (found) {
+      Log.debug("acceptor.create", "Updating crawled page", body);
       await crawlCollection.updateOne(
         { _id: found._id },
         { $set: { ...body, crawlDate } }
       );
     } else {
+      Log.debug("acceptor.create", "Creating crawled page", body);
       await crawlCollection.insertOne({ ...body, crawlDate });
     }
     res.status(201).send();
   } catch (error) {
+    Log.error("acceptor.create", "Error creating crawled page", error);
     next(error);
   }
 };

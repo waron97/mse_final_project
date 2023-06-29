@@ -5,6 +5,7 @@ import express from "express";
 import acceptorRouter from "./api/acceptor";
 import frontierRouter from "./api/frontier";
 import initFrontier from "./api/frontier/initFrontier";
+import Log from "./util/logs";
 
 async function initDb() {
   initFrontier();
@@ -24,5 +25,7 @@ export default async function startServer() {
   app.listen(3000, () => {
     // eslint-disable-next-line
     console.log("Frontier/Acceptor started on container port 3000");
+
+    Log.info("Bootstrap", "Frontier/Acceptor started on container port 3000");
   });
 }
