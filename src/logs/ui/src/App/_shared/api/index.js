@@ -2,11 +2,7 @@ import axios from 'axios'
 import formUrlEncoded from 'form-urlencoded'
 
 function getBaseUrl() {
-    if (process.env.NODE_ENV === 'development') {
-        return 'http://localhost:8090'
-    } else {
-        return window.location.origin
-    }
+    return window.location.origin
 }
 
 export function getApiUrl(endpoint, params) {

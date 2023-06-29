@@ -11,6 +11,7 @@ WORKDIR /usr/app/ui
 
 COPY ui/package.json package.json
 COPY ui/yarn.lock yarn.lock
+RUN npx update-browserslist-db@latest
 
 RUN yarn
 
