@@ -1,6 +1,5 @@
 package org.mse;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +7,7 @@ public class Robots {
     private String robotsTxt;
     private List<String> allowPatterns;
     private List<String> disallowPatterns;
+
     public Robots(String robotsTxt) {
         this.robotsTxt = robotsTxt;
         this.allowPatterns = new ArrayList<>();
@@ -21,7 +21,7 @@ public class Robots {
         }
         String[] lines = this.robotsTxt.split("\n");
         Boolean doRecord = false;
-        for (String line:lines) {
+        for (String line : lines) {
             try {
                 if (line.startsWith("User-agent")) {
                     String userAgent = line.split(": ")[1].strip();
@@ -61,11 +61,11 @@ public class Robots {
 
     private Boolean checkPattern(String url, List<String> patterns) {
         Boolean inPattern = false;
-        for (String pat: patterns) {
-               if (pat.equals(url)) {
-                   inPattern = true;
-                   break;
-               }
+        for (String pat : patterns) {
+            if (pat.equals(url)) {
+                inPattern = true;
+                break;
+            }
         }
         return inPattern;
     }
