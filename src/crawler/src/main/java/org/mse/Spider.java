@@ -11,18 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spider implements Runnable {
+    private String initialUrl;
     private List<String> visited = new ArrayList<>();
     private List<String> next = new ArrayList<>();
 
     private OkHttpClient client = new OkHttpClient();
     private Frontier frontier;
 
-    public Spider (Frontier frontier) {
+    public Spider (Frontier frontier, String initialUrl) {
         this.frontier = frontier;
+        this.initialUrl = initialUrl;
     }
 
     @Override
     public void run() {
+        startOnPage(this.initialUrl);
         while (true) {
             startOnPage(frontier.pop());
         }

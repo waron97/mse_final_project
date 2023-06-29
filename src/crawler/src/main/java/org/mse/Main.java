@@ -14,7 +14,7 @@ public class Main {
         }
 
         for (Integer i = 0; i < numThreads; i++) {
-            Thread t = new Thread(new Spider(frontier));
+            Thread t = new Thread(new Spider(frontier, frontier.pop()));
             threads.add(t);
             t.start();
         }
