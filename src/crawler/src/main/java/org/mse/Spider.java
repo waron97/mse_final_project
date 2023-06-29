@@ -32,9 +32,12 @@ public class Spider implements Runnable {
     }
 
     private void startOnPage(String url) {
-        System.out.println(
-                "[Spider " + Thread.currentThread().getName() + "] starting on URL " + url
+        Logger.info(
+                "startPage",
+                "[Spider " + Thread.currentThread().getName() + "] starting on URL " + url,
+                null
         );
+
         processPage(url);
         while (!next.isEmpty()) {
             String nextPage = next.remove(0);
@@ -46,7 +49,11 @@ public class Spider implements Runnable {
     }
 
     private void processPage(String url) {
-
+        Logger.debug(
+                "processPage",
+                "[Spider " + Thread.currentThread().getName() + "] processing URL " + url,
+                null
+        );
         Robots robots = Util.getRobots(url);
         String absoluteUrl = Util.getBaseUrl(url);
 
@@ -133,7 +140,7 @@ public class Spider implements Runnable {
         try (Response response = client.newCall(request).execute()) {
             // success
         } catch (IOException e) {
-            System.out.println("[ERROR] could not register crawl data");
+            Logger.error("sendCrawl", "Could not register crawl data", null);
         }
     }
 

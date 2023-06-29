@@ -9,7 +9,7 @@ public class Main {
         List<Thread> threads = new ArrayList<>();
         Frontier frontier = new Frontier(Constants.frontierUrl);
 
-        while (!frontier.isAlive()) {
+        while (!frontier.isAlive() || !Logger.isAlive()) {
             Thread.sleep(100);
         }
 
