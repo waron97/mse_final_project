@@ -2,10 +2,14 @@ import { RequestHandler } from "express";
 
 import { crawlCollection } from "../../db/crawl";
 import Log from "../../util/logs";
+import splitPassages from "../../util/passages";
 
 export const create: RequestHandler = async (req, res, next) => {
   try {
     const { body } = req;
+    body.passages = splitPassages(
+      body.mainTextContent || body.bodyTextContent || ""
+    );
     const { url } = body;
     const crawlDate = new Date();
     const found = await crawlCollection.findOne({ url });
