@@ -15,18 +15,14 @@ export default function splitPassages(text: string): string[] {
         currPassage = currPassage.concat(sentences[i]);
         currLength += tokens.length;
       } else { // if adding the next sentences exceed the maxLength
-        if (currPassage != "") {  // save the current passage (combination of the previous short sentences) in passages
-          passages.push(currPassage);
-        }
+        pushNotEmptyPassage(currPassage, passages); // save the current passage (combination of the previous short sentences) in passages
 
         if (tokens.length <= maxLength) { // if the next sentence is shorter than maxLength, push the next sentence into passages
           passages.push(sentences[i]);
         } else { // if the next sentence is longer than maxLength, split the next sentence
           for (let j = 0; j < tokens.length; j += maxLength) {
             currPassage = tokens.slice(j, j + maxLength).join(" ");
-            if (currPassage != "") {
-              passages.push(currPassage);
-            }
+            pushNotEmptyPassage(currPassage, passages);
           }
         }
         currPassage = "";
@@ -36,9 +32,13 @@ export default function splitPassages(text: string): string[] {
     }
 
     // add rest of the sentences to the passage
-    if (currPassage != "") {
-      passages.push(currPassage);
-    }
+    pushNotEmptyPassage(currPassage, passages);
     return passages;
   }
-} 
+}
+
+function pushNotEmptyPassage(p: string, passages: string[]): string[] {
+  if (p != "") {
+    passages.push(p);
+  }
+}
