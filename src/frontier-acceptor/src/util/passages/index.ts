@@ -1,8 +1,9 @@
 export default function splitPassages(text: string): string[] {
   const maxLength = 64;
+  // eslint-disable-next-line
   const regex = /\(?[^\.\?\!]+[\.!\?]\)?/g;
-  let sentences = text.match(regex);
-  let passages: string[] = [];
+  const sentences = text.match(regex);
+  const passages: string[] = [];
   if (!sentences) {
     return passages;
   } else {
@@ -10,16 +11,20 @@ export default function splitPassages(text: string): string[] {
     let currPassage = "";
     let i = 0;
     while (i < sentences.length) {
-      let tokens = sentences[i].split(" ");
-      if (currLength + tokens.length <= maxLength) { // combines several short sentences together in one passage
+      const tokens = sentences[i].split(" ");
+      if (currLength + tokens.length <= maxLength) {
+        // combines several short sentences together in one passage
         currPassage = currPassage.concat(sentences[i]);
         currLength += tokens.length;
-      } else { // if adding the next sentences exceed the maxLength
+      } else {
+        // if adding the next sentences exceed the maxLength
         pushNotEmptyPassage(currPassage, passages); // save the current passage (combination of the previous short sentences) in passages
 
-        if (tokens.length <= maxLength) { // if the next sentence is shorter than maxLength, push the next sentence into passages
+        if (tokens.length <= maxLength) {
+          // if the next sentence is shorter than maxLength, push the next sentence into passages
           passages.push(sentences[i]);
-        } else { // if the next sentence is longer than maxLength, split the next sentence
+        } else {
+          // if the next sentence is longer than maxLength, split the next sentence
           for (let j = 0; j < tokens.length; j += maxLength) {
             currPassage = tokens.slice(j, j + maxLength).join(" ");
             pushNotEmptyPassage(currPassage, passages);
@@ -37,8 +42,8 @@ export default function splitPassages(text: string): string[] {
   }
 }
 
-function pushNotEmptyPassage(p: string, passages: string[]): string[] {
-  if (p != "") {
+function pushNotEmptyPassage(p: string, passages: string[]) {
+  if (p !== "") {
     passages.push(p);
   }
 }
