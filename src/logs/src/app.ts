@@ -7,11 +7,17 @@ import appRouter from './api';
 import { createDefaultKeys } from './api/keys/service';
 import { scheduleObsoleteLogsRemoval } from './api/logs/service';
 import appEnv from './constants/env';
+import { dbName } from './constants/mongo';
 
-mongoose.connect(appEnv.mongoUri).then(() => {
-  createDefaultKeys();
-  scheduleObsoleteLogsRemoval();
-});
+mongoose
+  .connect(appEnv.mongoUri, { dbName })
+  .then(() => {
+    createDefaultKeys();
+    scheduleObsoleteLogsRemoval();
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 const app = express();
 

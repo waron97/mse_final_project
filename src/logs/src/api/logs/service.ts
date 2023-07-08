@@ -64,7 +64,7 @@ export const scheduleObsoleteLogsRemoval = () => {
         const deleteTime = getLogDeleteTime(date, level);
         const now = dayjs();
         if (now.isAfter(deleteTime)) {
-          await log.remove();
+          await Log.deleteOne({ _id: log._id });
         }
       });
   }
