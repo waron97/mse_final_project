@@ -19,13 +19,13 @@ export const create: RequestHandler = async (req, res, next) => {
     const crawlDate = new Date();
     const found = await crawlCollection.findOne({ url });
     if (found) {
-      Log.debug("acceptor.create", "Updating crawled page", body);
+      Log.debug("acceptor.create", "Updating crawled page", { url });
       await crawlCollection.updateOne(
         { _id: found._id },
         { $set: { ...body, crawlDate } }
       );
     } else {
-      Log.debug("acceptor.create", "Creating crawled page", body);
+      Log.debug("acceptor.create", "Creating crawled page", { url });
       await crawlCollection.insertOne({ ...body, crawlDate });
     }
     res.status(201).send();

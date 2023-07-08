@@ -111,9 +111,9 @@ public class Spider implements Runnable {
             );
 
         } catch (IOException e) {
-
+            Logger.error("processPage", "Error while processing page", e);
         } catch (Exception e) {
-
+            Logger.error("processPage", "Error while processing page", e);
         }
     }
 
