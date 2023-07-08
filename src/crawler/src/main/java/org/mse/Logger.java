@@ -20,7 +20,7 @@ public class Logger {
         body.put("message", message);
 
         if (data != null) {
-            body.put("data", gson.toJson(data));
+            body.put("detail", gson.toJson(data));
         }
 
         OkHttpClient client = new OkHttpClient();

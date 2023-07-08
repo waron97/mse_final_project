@@ -6,9 +6,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Spider implements Runnable {
     private String initialUrl;
@@ -111,8 +114,16 @@ public class Spider implements Runnable {
             );
 
         } catch (IOException e) {
-            Logger.error("processPage", "Error while processing page at " + url, null);
-        } catch (Exception e) {
+            if (e instanceof ConnectException) {
+                ConnectException error = (ConnectException) e;
+                Map<String, String> details = new HashMap<String, String>();
+                details.put("url", url);
+                details.put("message", error.getMessage());
+                Logger.error("processPage", "Error while processing page at " + url, details);
+            } else {
+                Logger.error("processPage", "Error while processing page at " + url, null);
+            }
+        }  catch (Exception e) {
             Logger.error("processPage", "Error while processing page at " + url, null);
         }
     }
