@@ -1,4 +1,4 @@
-./vars.sh
+. ./vars.sh
 
-cd ..
+cd ../..
 ssh -i $KEY_PATH $USER@$IP_ADDR

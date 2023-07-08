@@ -1,6 +1,5 @@
-
+. ./vars.sh
 IGNORE_FILE=src/scripts/exclude-list.txt
-./vars.sh
 
 cd ../..
 rsync -avz -e "ssh -i $KEY_PATH" --exclude-from $IGNORE_FILE ./ $USER@$IP_ADDR:/home/$USER/mse
