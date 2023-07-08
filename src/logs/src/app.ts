@@ -7,9 +7,8 @@ import appRouter from './api';
 import { createDefaultKeys } from './api/keys/service';
 import { scheduleObsoleteLogsRemoval } from './api/logs/service';
 import appEnv from './constants/env';
-import { mongoUri } from './constants/mongo';
 
-mongoose.connect(mongoUri).then(() => {
+mongoose.connect(appEnv.mongoUri).then(() => {
   createDefaultKeys();
   scheduleObsoleteLogsRemoval();
 });
