@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 
-import { mongoConnectionString } from "../constants";
+import appEnv from "../util/constants";
 
-export const client = new MongoClient(mongoConnectionString, {
+export const client = new MongoClient(appEnv.mongoUri, {
   monitorCommands: true,
 });
 
