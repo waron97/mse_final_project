@@ -9,15 +9,10 @@ import { scheduleObsoleteLogsRemoval } from './api/logs/service';
 import appEnv from './constants/env';
 import { dbName } from './constants/mongo';
 
-mongoose
-  .connect(appEnv.mongoUri, { dbName })
-  .then(() => {
-    createDefaultKeys();
-    scheduleObsoleteLogsRemoval();
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+mongoose.connect(appEnv.mongoUri, { dbName }).then(() => {
+  createDefaultKeys();
+  scheduleObsoleteLogsRemoval();
+});
 
 const app = express();
 
