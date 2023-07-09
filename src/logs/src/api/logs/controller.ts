@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 
+import appEnv from '../../constants/env';
 import { paginated, success } from '../../services/responses';
 import Log from './model';
 import { processLogFilters } from './service';
@@ -22,7 +23,15 @@ export const index: RequestHandler = async (req, res, next) => {
 };
 
 export const create: RequestHandler = (req, res, next) => {
-  Log.create(req.body).then(success(res, 201)).catch(next);
+  if (appEnv.appEnv === 'development') {
+    Log.create(req.body).then(success(res, 201)).catch(next);
+  } else {
+    if (req.body.level !== 'debug') {
+      Log.create(req.body).then(success(res, 201)).catch(next);
+    } else {
+      res.status(200).send();
+    }
+  }
 };
 
 export const getAppIds: RequestHandler = async (req, res, next) => {
