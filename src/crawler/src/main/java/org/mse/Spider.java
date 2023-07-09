@@ -151,7 +151,16 @@ public class Spider implements Runnable {
         try (Response response = client.newCall(request).execute()) {
             // success
         } catch (IOException e) {
-            Logger.error("sendCrawl", "Could not register crawl data", null);
+            if (e instanceof ConnectException) {
+                Map<String, String> data = new HashMap<>();
+                ConnectException error = (ConnectException) e;
+                data.put("message", error.getMessage());
+                Logger.error("sendCrawl", "Could not register crawl data", data);
+                return;
+            }
+            Map<String, String> data = new HashMap<>();
+            data.put("message", e.getMessage());
+            Logger.error("sendCrawl", "Could not register crawl data", data);
         }
     }
 
@@ -178,7 +187,9 @@ public class Spider implements Runnable {
             CrawlResult result = gson.fromJson(body, CrawlResult.class);
             return result;
         } catch (IOException e) {
-            System.out.println("[ERROR] could not register crawl data");
+            Map<String, String> data = new HashMap<String, String>();
+            data.put("message", e.getMessage());
+            Logger.debug("getExisting", "Could not retrieve crawl data", data);
             return null;
         } catch (Exception e) {
             return null;
