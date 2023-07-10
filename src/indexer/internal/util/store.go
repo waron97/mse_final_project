@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -14,42 +13,55 @@ import (
 
 type Store struct {
 	logger          *Logger
+	Timestamp       time.Time
+	connString      string
 	storePath       string
 	infoPath        string
 	documentPath    string
 	avgDocumentPath string
-	Timestamp       time.Time
+	clusterDir      string
+	clusterMapPath  string
+	ClusterMap      *ClusterMap
 }
 
-func New(indexPath string, logger *Logger) *Store {
-	timestamp, err := readTimestamp(indexPath + "/info.index")
+func New(indexPath string, connString string, logger *Logger) *Store {
+	timestamp, _ := readTimestamp(indexPath + "/info.index")
+
+	var clusterMap *ClusterMap
+	err := readStructFromFile(indexPath+"/cluster"+"/clusterMap.index", clusterMap)
 	if err != nil {
-		fmt.Println(err)
+		clusterMap = NewClusterMap(indexPath + "/cluster")
 	}
+
 	return &Store{
 		logger:          logger,
+		connString:      connString,
 		storePath:       indexPath,
 		Timestamp:       timestamp,
 		documentPath:    indexPath + "/documents",
 		avgDocumentPath: indexPath + "/documents_averaged",
 		infoPath:        indexPath + "/info.index",
+		clusterDir:      indexPath + "/cluster",
+		clusterMapPath:  indexPath + "/cluster" + "/clusterMap.index",
+		ClusterMap:      clusterMap,
 	}
 }
 
 func (index *Store) Store() {
-	documents, err := GetAllCrawlPages(index.Timestamp)
+	documents, err := GetAllCrawlPages(index.connString, index.Timestamp)
 	newTime := time.Now()
 	if err != nil {
 		index.logger.Critical("store.go;Store()", "cannot retrieve data from DB", err)
-		fmt.Println(err)
+		panic(err)
 	}
 	fmt.Println(documents)
 
 	for _, doc := range documents {
 		emb := getEmbeddings(doc.MainText)
-		err = writeStructToFile(index.documentPath+"/"+doc.ID.Hex()+".gob", emb)
+		err = writeStructToFile(index.documentPath+"/"+doc.ID.Hex(), emb)
 		if err != nil {
 			index.logger.Critical("store.go;Store()", "cannot write vector to file", err)
+			panic(err)
 		}
 
 		avgEmb, err := averageDocument(emb)
@@ -58,10 +70,15 @@ func (index *Store) Store() {
 			panic("vector 0 length")
 		}
 
-		err = writeStructToFile(index.avgDocumentPath+"/"+doc.ID.Hex()+".gob", avgEmb)
+		err = writeStructToFile(index.avgDocumentPath+"/"+doc.ID.Hex(), avgEmb)
 		if err != nil {
 			index.logger.Critical("store.go;Store()", "cannot write vector to file", err)
-			panic("can't write to file")
+			panic(err)
+		}
+
+		if len(index.ClusterMap.Centroids) > 0 {
+			docEmb := NewDocEmbedding(doc.ID.Hex(), avgEmb)
+			index.ClusterMap.IndexDoc(docEmb)
 		}
 	}
 	index.updateTimestamp(newTime)
@@ -137,7 +154,22 @@ func writeStructToFile(filename string, data interface{}) error {
 	return nil
 }
 
-// BuildIndex Build a new index by calculating k centroids using n random documents
+func readStructFromFile(filename string, data interface{}) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	decoder := gob.NewDecoder(file)
+	err = decoder.Decode(data)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// BuildIndex Build a new index by calculating k Centroids using n random documents
 func (index *Store) BuildIndex(n, k int) {
 	files, err := ioutil.ReadDir(index.avgDocumentPath)
 	if err != nil {
@@ -153,12 +185,29 @@ func (index *Store) BuildIndex(n, k int) {
 		fmt.Println(filePath)
 		embedding, err := readAvgDocument(filePath)
 		if err != nil {
-			log.Printf("Failed to parse %s: %s", file.Name(), err)
-			panic("can't read file")
+			panic("can't read " + file.Name())
 		}
 		sampledDocEmbeddings[i] = NewDocEmbedding(file.Name(), embedding)
 	}
-	Cluster(sampledDocEmbeddings, k)
+
+	Cluster(sampledDocEmbeddings, k, index.ClusterMap)
+
+	// assign all existing documents to cluster
+	for _, file := range files {
+		filePath := filepath.Join(index.avgDocumentPath, file.Name())
+		doc, err := readAvgDocument(filePath)
+		if err != nil {
+			panic(err)
+		}
+
+		docEmb := NewDocEmbedding(file.Name(), doc)
+		index.ClusterMap.IndexDoc(docEmb)
+	}
+
+	err = writeStructToFile(index.clusterMapPath, index.ClusterMap)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func getDocumentSubset(files []os.FileInfo, count int) ([]os.FileInfo, []os.FileInfo) {

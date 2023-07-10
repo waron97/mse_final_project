@@ -1,9 +1,10 @@
 package util
 
 import (
-	"fmt"
 	"github.com/muesli/clusters"
 	"github.com/muesli/kmeans"
+	"golang.org/x/exp/slices"
+	"strconv"
 )
 
 type DocEmbedding struct {
@@ -11,9 +12,10 @@ type DocEmbedding struct {
 	Embedding Vector
 }
 
-type CentroidMap struct {
-	data      map[string][]*DocEmbedding
-	centroids []Vector
+type ClusterMap struct {
+	Centroids    []Vector
+	centroidsStr []string
+	baseDir      string
 }
 
 func NewDocEmbedding(docId string, embedding Vector) *DocEmbedding {
@@ -23,79 +25,83 @@ func NewDocEmbedding(docId string, embedding Vector) *DocEmbedding {
 	}
 }
 
-func NewCentroidMap() *CentroidMap {
-	return &CentroidMap{
-		data:      make(map[string][]*DocEmbedding),
-		centroids: make([]Vector, 0),
+func NewClusterMap(baseDir string) *ClusterMap {
+	return &ClusterMap{
+		Centroids:    make([]Vector, 0),
+		centroidsStr: make([]string, 0),
+		baseDir:      baseDir,
 	}
 }
 
-func (cm *CentroidMap) Insert(key Vector, value *DocEmbedding) {
-	strKey := key.ToString()
-	if _, ok := cm.data[strKey]; ok {
-		cm.data[strKey] = append(cm.data[strKey], value)
-		cm.centroids = append(cm.centroids, key)
-	} else {
-		cm.data[strKey] = []*DocEmbedding{value}
+func (cm *ClusterMap) GetCentroidCluster(cIdx int) []*DocEmbedding {
+	var centroidEmb []*DocEmbedding
+	centroidPath := cm.baseDir + "/centroid_" + strconv.Itoa(cIdx)
+	err := readStructFromFile(centroidPath, &centroidEmb)
+	if err != nil {
+		panic("can't read file")
+	}
+	return centroidEmb
+}
+
+func (cm *ClusterMap) addCentroid(v Vector) {
+	vStr := v.ToString()
+	if !slices.Contains(cm.centroidsStr, vStr) {
+		cm.centroidsStr = append(cm.centroidsStr, vStr)
+		cm.Centroids = append(cm.Centroids, v)
 	}
 }
 
-func (cm *CentroidMap) addCentroid(v Vector) {
-	strKey := v.ToString()
-	if _, ok := cm.data[strKey]; !ok {
-		cm.data[strKey] = []*DocEmbedding{}
-		cm.centroids = append(cm.centroids, v)
-	}
-}
-
-func (cm *CentroidMap) Get(key Vector) []*DocEmbedding {
-	strKey := key.ToString()
-	return cm.data[strKey]
-}
-
-func (cm *CentroidMap) IndexDoc(d *DocEmbedding) {
+func (cm *ClusterMap) GetClosetCentroid(d *DocEmbedding) int {
+	cIdx := -1
 	maxCosim := 0.0
-	var maxCentroid Vector
 
-	// get closest centroid
-	for _, centroid := range cm.centroids {
+	// get centroid with smalles cosine similarity
+	for i, centroid := range cm.Centroids {
 		cos := Cosim(d.Embedding, centroid)
 		if cos > maxCosim {
 			maxCosim = cos
-			maxCentroid = centroid
+			cIdx = i
 		}
 	}
+	return cIdx
+}
 
-	cm.Insert(maxCentroid, d)
+func (cm *ClusterMap) IndexDoc(d *DocEmbedding) {
+	cIdx := cm.GetClosetCentroid(d)
+	centroidPath := cm.baseDir + "/centroid_" + strconv.Itoa(cIdx)
 
-	for key, value := range cm.data {
-		fmt.Println("Documents with Vector", key[0], key[1], key[2], key[3])
-		for _, doc := range value {
-			fmt.Println("DOC", doc.DocId)
-		}
+	// ToDo - Find serialization format that allows to append to existing file, without bad read performance
+	var centroidEmb []*DocEmbedding
+	err := readStructFromFile(centroidPath, &centroidEmb)
+
+	// Create new slice, if file does not exist
+	if err != nil {
+		centroidEmb = make([]*DocEmbedding, 1)
+		centroidEmb[0] = d
+	} else {
+		centroidEmb = append(centroidEmb, d)
+	}
+
+	err = writeStructToFile(centroidPath, centroidEmb)
+	if err != nil {
+		panic(err)
 	}
 }
 
-func Cluster(embeddings []*DocEmbedding, k int) {
+func Cluster(embeddings []*DocEmbedding, k int, cm *ClusterMap) {
 	var d clusters.Observations
 	for _, x := range embeddings {
 		d = append(d, clusters.Coordinates(x.Embedding))
 	}
 
-	// calculate centroids
+	// calculate Centroids
 	km := kmeans.New()
 	clusters, err := km.Partition(d, k)
 	if err != nil {
-		fmt.Println("Error", err)
-		return
+		panic(err)
 	}
 
-	cm := NewCentroidMap()
 	for _, c := range clusters {
 		cm.addCentroid(Vector(c.Center))
-	}
-
-	for _, e := range embeddings {
-		cm.IndexDoc(e)
 	}
 }
