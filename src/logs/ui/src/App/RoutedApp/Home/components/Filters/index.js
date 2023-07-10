@@ -31,7 +31,7 @@ function _Filters(props) {
     const { apiKey } = useAuth()
 
     const { data: appIds = [] } = useQuery(
-        ['app-ids', apiKey],
+        ['indexer-ids', apiKey],
         () => getAppIds(apiKey),
         { enabled: !!apiKey }
     )

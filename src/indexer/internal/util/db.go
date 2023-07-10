@@ -28,8 +28,9 @@ func (page PageCrawl) String() string {
 }
 
 func getClient() *mongo.Client {
-	connString := "mongodb://db:27017"
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	fmt.Println("TRUE")
+	connString := "mongodb://localhost:27017"
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connString))
 	defer cancel()
 	if err != nil {
@@ -53,4 +54,39 @@ func GetCrawlPage() PageCrawl {
 
 	fmt.Printf("%s\n", result.String())
 	return result
+}
+
+func GetAllCrawlPages(time ...time.Time) ([]PageCrawl, error) {
+	client := getClient()
+	collection := client.Database("mse").Collection("crawl")
+	var results []PageCrawl
+
+	// Only get documents from time onwards, if time is specified
+	filter := bson.D{}
+	if len(time) > 0 {
+		filter = bson.D{
+			{Key: "crawlDate", Value: bson.D{{Key: "$gte", Value: primitive.NewDateTimeFromTime(time[0])}}},
+		}
+	}
+	ctx := context.TODO()
+
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute find query: %s", err)
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var result PageCrawl
+		if err := cursor.Decode(&result); err != nil {
+			return nil, fmt.Errorf("failed to decode document: %s", err)
+		}
+		results = append(results, result)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, fmt.Errorf("cursor error: %s", err)
+	}
+
+	return results, nil
 }

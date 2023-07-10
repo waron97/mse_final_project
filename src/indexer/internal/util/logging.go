@@ -26,9 +26,10 @@ func (l Logger) isAlive() bool {
 func (l Logger) send(level string, location string, message string, data interface{}) bool {
 	constants := GetConstants()
 
-	for !l.isAlive() {
-		time.Sleep(1 * time.Second)
-	}
+	//for !l.isAlive() {
+	//	fmt.Println("TRUE")
+	//	time.Sleep(1 * time.Second)
+	//}
 
 	body := Log{
 		Level:    level,
@@ -84,6 +85,6 @@ func (l Logger) Critical(location string, message string, data interface{}) bool
 	return l.send("critical", location, message, data)
 }
 
-func GetLogger() Logger {
-	return Logger{}
+func GetLogger() *Logger {
+	return &Logger{}
 }
