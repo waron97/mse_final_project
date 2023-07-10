@@ -1,1 +1,3 @@
 ./app
+./offline-index
+./src/indexer/offline-index
