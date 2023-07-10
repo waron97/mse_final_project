@@ -27,9 +27,7 @@ func (page PageCrawl) String() string {
 	return fmt.Sprintf("url: %s, title: %s", page.URL, page.Title)
 }
 
-func getClient() *mongo.Client {
-	fmt.Println("TRUE")
-	connString := "mongodb://localhost:27017"
+func getClient(connString string) *mongo.Client {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connString))
 	defer cancel()
@@ -40,9 +38,9 @@ func getClient() *mongo.Client {
 	return client
 }
 
-func GetCrawlPage() PageCrawl {
+func GetCrawlPage(connString string) PageCrawl {
 	// https://www.mongodb.com/docs/drivers/go/current/usage-examples/findOne/
-	client := getClient()
+	client := getClient(connString)
 	collection := client.Database("mse").Collection("crawl")
 	var result PageCrawl
 	filter := bson.D{{Key: "url", Value: "https://www.tuebingen.de/"}}
@@ -56,8 +54,8 @@ func GetCrawlPage() PageCrawl {
 	return result
 }
 
-func GetAllCrawlPages(time ...time.Time) ([]PageCrawl, error) {
-	client := getClient()
+func GetAllCrawlPages(connString string, time ...time.Time) ([]PageCrawl, error) {
+	client := getClient(connString)
 	collection := client.Database("mse").Collection("crawl")
 	var results []PageCrawl
 
