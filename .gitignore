@@ -1,2 +1,4 @@
 .DS_Store
-/src/offline-index/*
+/src/indexer/offline-index
+.idea
+/src/offline-index/
