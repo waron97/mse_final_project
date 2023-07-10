@@ -10,8 +10,8 @@ services:
     ports:
       - "8090:8080"
     volumes:
-      - ./logs/cmd:/usr/indexer/cmd:rw
-      - ./logs/static:/usr/indexer/static:rw
+      - ./logs/src:/usr/app/src:rw
+      - ./logs/static:/usr/app/static:rw
     environment:
       - MONGO_URI=${MONGO_URI_LOGS}
       - APP_PORT=8080
@@ -49,7 +49,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./frontier-acceptor/cmd:/usr/indexer/cmd:ro
+      - ./frontier-acceptor/src:/usr/app/src:ro
     environment:
       - LOGS_APP_NAME=frontier-acceptor
       - APP_ENV=${APP_ENV}
@@ -74,8 +74,8 @@ services:
     networks:
       - app-network
     volumes:
-      - ./bert/indexer:/usr/indexer/indexer:ro
-      - ./bert/out:/usr/indexer/out:rw
+      - ./bert/app:/usr/app/app:ro
+      - ./bert/out:/usr/app/out:rw
     ports:
       - "8081:5000"
     environment:
@@ -110,8 +110,8 @@ services:
       - bert
       - db
     volumes:
-      - ./offline-index:/go/cmd/indexer/offline-index:rw
-      - ./ranker/cmd:/go/cmd/indexer/cmd:ro
+      - ./offline-index:/go/src/app/offline-index:rw
+      - ./ranker/src:/go/src/app/src:ro
     environment:
       - LOGS_APP_NAME=ranker
       - APP_ENV=${APP_ENV}
