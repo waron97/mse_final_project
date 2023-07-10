@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
+// indexingGoRoutine Run indexer.Store() function continuously
 func indexingGoRoutine(indexer *util.Store) {
-	// Run the initial indexer.Store() function
 	var wg sync.WaitGroup
 
 	// Create a channel to coordinate termination
@@ -32,15 +32,14 @@ func indexingGoRoutine(indexer *util.Store) {
 	runIndexStore(&wg, indexer)
 	fmt.Println("indexing", time.Now())
 
-	// Schedule the subsequent runs of indexer.Store() every 5 hours
 	ticker := time.NewTicker(1 * time.Hour)
 
-	// Start a goroutine to run indexer.Store() at the scheduled intervals
+	// run indexer.Store() at the scheduled intervals
 	go func() {
 		for {
 			select {
 			case <-done:
-				// Termination signal received, wait for the current indexer.Store() operation to complete
+				// wait for completion upon receiving Termination signal
 				wg.Wait()
 
 				// Exit the goroutine
@@ -48,10 +47,7 @@ func indexingGoRoutine(indexer *util.Store) {
 				os.Exit(0)
 
 			case <-ticker.C:
-				// Acquire the mutex to ensure exclusive access
 				wg.Wait()
-
-				// Run the indexer.Store() function
 				runIndexStore(&wg, indexer)
 				fmt.Println("indexing", time.Now())
 			}
@@ -65,8 +61,6 @@ func runIndexStore(wg *sync.WaitGroup, indexer *util.Store) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-
-		// Perform the indexer.Store() operation
 		indexer.Store()
 	}()
 }
@@ -85,9 +79,9 @@ func main() {
 
 	indexer := util.New(*bFlag, *dFlag, logger)
 
+	// calculate clusters before storing new documents
 	if *cFlag {
 		fmt.Println("Building index")
-		// Check if the -n and -k flags are provided
 		if *nFlag == 0 || *kFlag == 0 {
 			fmt.Println("Both -n and -k flags must be provided")
 			flag.Usage()
@@ -95,6 +89,7 @@ func main() {
 		}
 		indexer.BuildIndex(*nFlag, *kFlag)
 	}
+
 	fmt.Println("Syncing index with DB")
 	indexingGoRoutine(indexer)
 }
