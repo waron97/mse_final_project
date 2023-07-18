@@ -115,7 +115,7 @@ services:
       - ./offline-index:/go/src/app/offline-index:rw
       - ./ranker/src:/go/src/app/src:ro
     ports:
-      - "5000:5000"
+      - "3000:5000"
     environment:
       - LOGS_APP_NAME=ranker
       - APP_ENV=${APP_ENV}
