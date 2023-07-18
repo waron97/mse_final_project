@@ -78,7 +78,7 @@ services:
       - ./bert/app:/usr/app/app:ro
       - ./bert/out:/usr/app/out:rw
     ports:
-      - "8081:5000"
+      - "6000:5000"
     environment:
       - BERT_MODEL=bert-base-uncased
       - MAX_QUERY_SIZE=50
@@ -114,6 +114,8 @@ services:
     volumes:
       - ./offline-index:/go/src/app/offline-index:rw
       - ./ranker/src:/go/src/app/src:ro
+    ports:
+      - "3000:5000"
     environment:
       - LOGS_APP_NAME=ranker
       - APP_ENV=${APP_ENV}
@@ -123,3 +125,4 @@ services:
 networks:
   app-network:
     driver: bridge
+
