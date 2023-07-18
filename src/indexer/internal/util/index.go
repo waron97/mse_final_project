@@ -15,7 +15,7 @@ type DocEmbedding struct {
 type ClusterMap struct {
 	Centroids    []Vector
 	centroidsStr []string
-	baseDir      string
+	BaseDir      string
 }
 
 func NewDocEmbedding(docId string, embedding Vector) *DocEmbedding {
@@ -29,14 +29,14 @@ func NewClusterMap(baseDir string) *ClusterMap {
 	return &ClusterMap{
 		Centroids:    make([]Vector, 0),
 		centroidsStr: make([]string, 0),
-		baseDir:      baseDir,
+		BaseDir:      baseDir,
 	}
 }
 
 func (cm *ClusterMap) GetCentroidCluster(cIdx int) []*DocEmbedding {
 	var centroidEmb []*DocEmbedding
-	centroidPath := cm.baseDir + "/centroid_" + strconv.Itoa(cIdx)
-	err := readStructFromFile(centroidPath, &centroidEmb)
+	centroidPath := cm.BaseDir + "/centroid_" + strconv.Itoa(cIdx)
+	err := ReadStructFromFile(centroidPath, &centroidEmb)
 	if err != nil {
 		panic("can't read file")
 	}
@@ -51,13 +51,14 @@ func (cm *ClusterMap) addCentroid(v Vector) {
 	}
 }
 
-func (cm *ClusterMap) GetClosetCentroid(d *DocEmbedding) int {
+func (cm *ClusterMap) GetClosetCentroid(v Vector) int {
 	cIdx := -1
 	maxCosim := 0.0
-
-	// get centroid with smalles cosine similarity
+	//fmt.Println("TTT", cm.Centroids)
+	// get centroid with smallest cosine similarity
 	for i, centroid := range cm.Centroids {
-		cos := Cosim(d.Embedding, centroid)
+		cos := Cosim(v, centroid)
+		//fmt.Println(cos)
 		if cos > maxCosim {
 			maxCosim = cos
 			cIdx = i
@@ -67,12 +68,12 @@ func (cm *ClusterMap) GetClosetCentroid(d *DocEmbedding) int {
 }
 
 func (cm *ClusterMap) IndexDoc(d *DocEmbedding) {
-	cIdx := cm.GetClosetCentroid(d)
-	centroidPath := cm.baseDir + "/centroid_" + strconv.Itoa(cIdx)
+	cIdx := cm.GetClosetCentroid(d.Embedding)
+	centroidPath := cm.BaseDir + "/centroid_" + strconv.Itoa(cIdx)
 
 	// ToDo - Find serialization format that allows to append to existing file, without bad read performance
 	var centroidEmb []*DocEmbedding
-	err := readStructFromFile(centroidPath, &centroidEmb)
+	err := ReadStructFromFile(centroidPath, &centroidEmb)
 
 	// Create new slice, if file does not exist
 	if err != nil {

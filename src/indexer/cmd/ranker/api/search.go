@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"indexer/internal/util"
 	"net/http"
+	"strconv"
 )
 
 func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
@@ -14,11 +16,28 @@ func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("ERROR", err)
 		app.badRequestResponse(w, r, err)
+		return
 	}
 
-	// ToDo - get query embedding
+	// get averaged query embedding
+	queryEmb := app.store.ComputeEmbedding(input.Query)
+	queryAvgEmb, err := app.store.ComputeAvgEmbedding(queryEmb)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	//fmt.Println(queryAvgEmb)
 
 	// ToDo - Retrieve top k documents from cluster
+	centroidId := app.store.ClusterMap.GetClosetCentroid(queryAvgEmb)
+	var centroidEmb []*util.DocEmbedding
+	err = util.ReadStructFromFile(app.store.ClusterMap.BaseDir+"/centroid_"+strconv.Itoa(centroidId), &centroidEmb)
+	if err != nil {
+		fmt.Println(err)
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	fmt.Println(centroidEmb)
 
 	resp := envelope{"documents": make([]string, 0), "query": input.Query}
 	err = app.writeJSON(w, http.StatusOK, resp, make(http.Header))

@@ -27,8 +27,9 @@ type Store struct {
 func New(indexPath string, connString string, logger *Logger) *Store {
 	timestamp, _ := readTimestamp(indexPath + "/info.index")
 
-	var clusterMap *ClusterMap
-	err := readStructFromFile(indexPath+"/cluster"+"/clusterMap.index", clusterMap)
+	clusterMap := &ClusterMap{}
+	//var clusterMap *ClusterMap
+	err := ReadStructFromFile(indexPath+"/cluster"+"/clusterMap.index", clusterMap)
 	if err != nil {
 		clusterMap = NewClusterMap(indexPath + "/cluster")
 	}
@@ -47,49 +48,49 @@ func New(indexPath string, connString string, logger *Logger) *Store {
 	}
 }
 
-func (index *Store) Store() {
-	documents, err := GetAllCrawlPages(index.connString, index.Timestamp)
+func (s *Store) Store() {
+	documents, err := GetAllCrawlPages(s.connString, s.Timestamp)
 	newTime := time.Now()
 	if err != nil {
-		index.logger.Critical("store.go;Store()", "cannot retrieve data from DB", err)
+		s.logger.Critical("store.go;Store()", "cannot retrieve data from DB", err)
 		panic(err)
 	}
 	fmt.Println(documents)
 
 	for _, doc := range documents {
 		emb := getEmbeddings(doc.MainText)
-		err = writeStructToFile(index.documentPath+"/"+doc.ID.Hex(), emb)
+		err = writeStructToFile(s.documentPath+"/"+doc.ID.Hex(), emb)
 		if err != nil {
-			index.logger.Critical("store.go;Store()", "cannot write vector to file", err)
+			s.logger.Critical("store.go;Store()", "cannot write vector to file", err)
 			panic(err)
 		}
 
 		avgEmb, err := averageDocument(emb)
 		if err != nil {
-			index.logger.Critical("store.go;Store()", "vector 0 length", err)
+			s.logger.Critical("store.go;Store()", "vector 0 length", err)
 			panic("vector 0 length")
 		}
 
-		err = writeStructToFile(index.avgDocumentPath+"/"+doc.ID.Hex(), avgEmb)
+		err = writeStructToFile(s.avgDocumentPath+"/"+doc.ID.Hex(), avgEmb)
 		if err != nil {
-			index.logger.Critical("store.go;Store()", "cannot write vector to file", err)
+			s.logger.Critical("store.go;Store()", "cannot write vector to file", err)
 			panic(err)
 		}
 
-		if len(index.ClusterMap.Centroids) > 0 {
+		if len(s.ClusterMap.Centroids) > 0 {
 			docEmb := NewDocEmbedding(doc.ID.Hex(), avgEmb)
-			index.ClusterMap.IndexDoc(docEmb)
+			s.ClusterMap.IndexDoc(docEmb)
 		}
 	}
-	index.updateTimestamp(newTime)
+	s.updateTimestamp(newTime)
 }
 
-func (index *Store) updateTimestamp(newTime time.Time) {
-	err := writeTimestamp(newTime, index.infoPath)
+func (s *Store) updateTimestamp(newTime time.Time) {
+	err := writeTimestamp(newTime, s.infoPath)
 	if err != nil {
 		panic("can't write file")
 	}
-	index.Timestamp = newTime
+	s.Timestamp = newTime
 }
 
 func readTimestamp(filepath string) (time.Time, error) {
@@ -154,7 +155,7 @@ func writeStructToFile(filename string, data interface{}) error {
 	return nil
 }
 
-func readStructFromFile(filename string, data interface{}) error {
+func ReadStructFromFile(filename string, data interface{}) error {
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -170,8 +171,8 @@ func readStructFromFile(filename string, data interface{}) error {
 }
 
 // BuildIndex Build a new index by calculating k Centroids using n random documents
-func (index *Store) BuildIndex(n, k int) {
-	files, err := ioutil.ReadDir(index.avgDocumentPath)
+func (s *Store) BuildIndex(n, k int) {
+	files, err := ioutil.ReadDir(s.avgDocumentPath)
 	if err != nil {
 		panic("can't read dir")
 	}
@@ -181,7 +182,7 @@ func (index *Store) BuildIndex(n, k int) {
 	// Read embeddings from files
 	sampledDocEmbeddings := make([]*DocEmbedding, len(sampledFiles))
 	for i, file := range sampledFiles {
-		filePath := filepath.Join(index.avgDocumentPath, file.Name())
+		filePath := filepath.Join(s.avgDocumentPath, file.Name())
 		fmt.Println(filePath)
 		embedding, err := readAvgDocument(filePath)
 		if err != nil {
@@ -190,21 +191,21 @@ func (index *Store) BuildIndex(n, k int) {
 		sampledDocEmbeddings[i] = NewDocEmbedding(file.Name(), embedding)
 	}
 
-	Cluster(sampledDocEmbeddings, k, index.ClusterMap)
+	Cluster(sampledDocEmbeddings, k, s.ClusterMap)
 
 	// assign all existing documents to cluster
 	for _, file := range files {
-		filePath := filepath.Join(index.avgDocumentPath, file.Name())
+		filePath := filepath.Join(s.avgDocumentPath, file.Name())
 		doc, err := readAvgDocument(filePath)
 		if err != nil {
 			panic(err)
 		}
 
 		docEmb := NewDocEmbedding(file.Name(), doc)
-		index.ClusterMap.IndexDoc(docEmb)
+		s.ClusterMap.IndexDoc(docEmb)
 	}
 
-	err = writeStructToFile(index.clusterMapPath, index.ClusterMap)
+	err = writeStructToFile(s.clusterMapPath, s.ClusterMap)
 	if err != nil {
 		fmt.Println(err)
 	}

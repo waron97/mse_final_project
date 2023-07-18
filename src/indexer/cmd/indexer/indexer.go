@@ -67,7 +67,7 @@ func runIndexStore(wg *sync.WaitGroup, indexer *util.Store) {
 
 func main() {
 	dFlag := flag.String("d", "mongodb://localhost:27017", "DB connection string")
-	bFlag := flag.String("b", "./offline-index", "Base directory for index storage")
+	bFlag := flag.String("b", "../offline-index", "Base directory for index storage")
 	cFlag := flag.Bool("c", false, "Assign and calculate document clusters")
 	nFlag := flag.Int("n", 0, "Number of documents for kmeans clustering")
 	kFlag := flag.Int("k", 0, "Number of clusters")
