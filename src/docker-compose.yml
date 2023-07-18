@@ -1,0 +1,129 @@
+services:
+
+  logs:
+    build: logs
+    container_name: logs
+    depends_on:
+      - db
+    networks:
+      - app-network
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./logs/src:/usr/app/src:rw
+      - ./logs/static:/usr/app/static:rw
+    environment:
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@db:27017
+      # - MONGO_URI=mongodb://mse:6b1621ac8a7b4a148fbea4e2c4239cc41a74d681e02349673c75725d6628c098@34.31.44.0:27017
+      - APP_PORT=8080
+      - DEFAULT_ADMIN_KEY=${LOGS_DEFAULT_ADMIN_KEY}
+      - DEFAULT_READONLY_KEY=${LOGS_DEFAULT_READONLY_KEY}
+      - DEFAULT_WRITEONLY_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - LIFETIME_DAYS_DEBUG=${LOGS_LIFETIME_DAYS_DEBUG}
+      - LIFETIME_DAYS_INFO=${LOGS_LIFETIME_DAYS_INFO}
+      - LIFETIME_DAYS_WARNING=${LOGS_LIFETIME_DAYS_WARNING}
+      - LIFETIME_DAYS_ERROR=${LOGS_LIFETIME_DAYS_ERROR}
+      - LIFETIME_DAYS_CRITICAL=${LOGS_LIFETIME_DAYS_CRITICAL}
+      - APP_ENV=${APP_ENV}
+    command: "yarn run dev"
+
+  db:
+    image: mongo:6
+    container_name: db
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - ./mongodata:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    command: --logpath /dev/null
+
+  frontier-acceptor:
+    build: ./frontier-acceptor
+    container_name: frontier-acceptor
+    restart: always
+    ports:
+      - "8080:3000"
+    networks:
+      - app-network
+    depends_on:
+      - db
+    volumes:
+      - ./frontier-acceptor/src:/usr/app/src:ro
+    environment:
+      - LOGS_APP_NAME=frontier-acceptor
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@db:27017
+      # - MONGO_URI=mongodb://mse:6b1621ac8a7b4a148fbea4e2c4239cc41a74d681e02349673c75725d6628c098@34.31.44.0:27017
+
+  crawler:
+    build: ./crawler
+    container_name: crawler
+    networks:
+      - app-network
+    depends_on:
+      - frontier-acceptor
+    environment:
+      - LOGS_APP_NAME=crawler
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+
+  bert:
+    build: ./bert
+    container_name: bert
+    networks:
+      - app-network
+    volumes:
+      - ./bert/app:/usr/app/app:ro
+      - ./bert/out:/usr/app/out:rw
+    ports:
+      - "8081:5000"
+    environment:
+      - BERT_MODEL=bert-base-uncased
+      - MAX_QUERY_SIZE=50
+      - LOGS_APP_NAME=bert
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+  
+  indexer:
+    build: ./indexer
+    container_name: indexer
+    networks:
+      - app-network
+    depends_on:
+      - bert
+      - db
+    volumes:
+      - ./offline-index:/go/src/app/offline-index:rw
+      - ./indexer/src:/go/src/app/src:ro
+    environment:
+      - LOGS_APP_NAME=indexer
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@db:27017
+
+  ranker:
+    build: ./ranker
+    container_name: ranker
+    networks:
+      - app-network
+    depends_on:
+      - bert
+      - db
+    volumes:
+      - ./offline-index:/go/src/app/offline-index:rw
+      - ./ranker/src:/go/src/app/src:ro
+    environment:
+      - LOGS_APP_NAME=ranker
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@db:27017
+
+networks:
+  app-network:
+    driver: bridge

@@ -6,9 +6,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Spider implements Runnable {
     private String initialUrl;
@@ -111,9 +114,17 @@ public class Spider implements Runnable {
             );
 
         } catch (IOException e) {
-
-        } catch (Exception e) {
-
+            if (e instanceof ConnectException) {
+                ConnectException error = (ConnectException) e;
+                Map<String, String> details = new HashMap<String, String>();
+                details.put("url", url);
+                details.put("message", error.getMessage());
+                Logger.error("processPage", "Error while processing page at " + url, details);
+            } else {
+                Logger.error("processPage", "Error while processing page at " + url, null);
+            }
+        }  catch (Exception e) {
+            Logger.error("processPage", "Error while processing page at " + url, null);
         }
     }
 
@@ -140,7 +151,16 @@ public class Spider implements Runnable {
         try (Response response = client.newCall(request).execute()) {
             // success
         } catch (IOException e) {
-            Logger.error("sendCrawl", "Could not register crawl data", null);
+            if (e instanceof ConnectException) {
+                Map<String, String> data = new HashMap<>();
+                ConnectException error = (ConnectException) e;
+                data.put("message", error.getMessage());
+                Logger.error("sendCrawl", "Could not register crawl data", data);
+                return;
+            }
+            Map<String, String> data = new HashMap<>();
+            data.put("message", e.getMessage());
+            Logger.error("sendCrawl", "Could not register crawl data", data);
         }
     }
 
@@ -167,7 +187,9 @@ public class Spider implements Runnable {
             CrawlResult result = gson.fromJson(body, CrawlResult.class);
             return result;
         } catch (IOException e) {
-            System.out.println("[ERROR] could not register crawl data");
+            Map<String, String> data = new HashMap<String, String>();
+            data.put("message", e.getMessage());
+            Logger.debug("getExisting", "Could not retrieve crawl data", data);
             return null;
         } catch (Exception e) {
             return null;

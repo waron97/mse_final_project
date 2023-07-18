@@ -7,6 +7,8 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 public class Util {
     static void loadPageHtml() {}
@@ -14,6 +16,12 @@ public class Util {
     static boolean isLegalUrl(String url) {
         if (url == null) {
             return false;
+        }
+        List<String> filePatterns = Arrays.asList(".pdf", ".png", ".jpg");
+        for (String pattern: filePatterns) {
+            if (url.endsWith(pattern)) {
+                return false;
+            }
         }
         try {
             URL asUrl = new URL(url);

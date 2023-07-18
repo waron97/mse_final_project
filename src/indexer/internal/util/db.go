@@ -27,8 +27,10 @@ func (page PageCrawl) String() string {
 	return fmt.Sprintf("url: %s, title: %s", page.URL, page.Title)
 }
 
-func getClient(connString string) *mongo.Client {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+func getClient() *mongo.Client {
+	constants := GetConstants()
+	connString := constants.mongoUri
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connString))
 	defer cancel()
 	if err != nil {

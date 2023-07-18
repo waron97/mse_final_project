@@ -28,7 +28,8 @@ func (page PageCrawl) String() string {
 }
 
 func getClient() *mongo.Client {
-	connString := "mongodb://db:27017"
+	constants := GetConstants()
+	connString := constants.mongoUri
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connString))
 	defer cancel()

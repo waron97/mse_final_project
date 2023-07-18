@@ -11,6 +11,7 @@ const appEnv = {
   appEnv: requireProcessEnv("APP_ENV"),
   logsAppName: requireProcessEnv("LOGS_APP_NAME"),
   logsApiKey: requireProcessEnv("LOGS_KEY"),
+  mongoUri: requireProcessEnv("MONGO_URI"),
 };
 
 export default appEnv;
