@@ -1,10 +1,9 @@
 package app
 
 import (
-	"ranker/src/util"
+	util "ranker/src/util/core"
 )
 
 func RunTasks() {
-	util.GetCrawlPage()
 	util.GetLogger().Info("Bootstrap", "Hello from GO ranker!", nil)
 }
