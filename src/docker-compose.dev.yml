@@ -13,7 +13,7 @@ services:
       - ./logs/src:/usr/app/src:rw
       - ./logs/static:/usr/app/static:rw
     environment:
-      - MONGO_URI=${MONGO_URI_LOGS}
+      - MONGO_URI=mongodb://db:27017/logs
       - APP_PORT=8080
       - DEFAULT_ADMIN_KEY=${LOGS_DEFAULT_ADMIN_KEY}
       - DEFAULT_READONLY_KEY=${LOGS_DEFAULT_READONLY_KEY}
@@ -54,6 +54,7 @@ services:
       - LOGS_APP_NAME=frontier-acceptor
       - APP_ENV=${APP_ENV}
       - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://db:27017
 
   crawler:
     build: ./crawler
@@ -100,6 +101,7 @@ services:
       - LOGS_APP_NAME=indexer
       - APP_ENV=${APP_ENV}
       - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://db:27017
 
   ranker:
     build: ./ranker
@@ -116,6 +118,7 @@ services:
       - LOGS_APP_NAME=ranker
       - APP_ENV=${APP_ENV}
       - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://db:27017
 
 networks:
   app-network:
