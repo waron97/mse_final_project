@@ -1,9 +1,9 @@
-package util
+package indexer
 
 import "math"
 
 // Cosim Cosine Similarity between two vectors v1, v2
-func Cosim(v1 Vector, v2 Vector) float64 {
+func cosim(v1 Vector, v2 Vector) float64 {
 	dotProduct := dot(v1, v2)
 	magnitudeV1 := magnitude(v1)
 	magnitudeV2 := magnitude(v2)

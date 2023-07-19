@@ -1,4 +1,4 @@
-package util
+package indexer
 
 import (
 	"context"
@@ -40,9 +40,9 @@ func getClient() *mongo.Client {
 	return client
 }
 
-func GetCrawlPage(connString string) PageCrawl {
+func GetCrawlPage() PageCrawl {
 	// https://www.mongodb.com/docs/drivers/go/current/usage-examples/findOne/
-	client := getClient(connString)
+	client := getClient()
 	collection := client.Database("mse").Collection("crawl")
 	var result PageCrawl
 	filter := bson.D{{Key: "url", Value: "https://www.tuebingen.de/"}}
@@ -56,37 +56,32 @@ func GetCrawlPage(connString string) PageCrawl {
 	return result
 }
 
-func GetAllCrawlPages(connString string, time ...time.Time) ([]PageCrawl, error) {
-	client := getClient(connString)
+func StoreAllCrawlPages(i *Index) error {
+	client := getClient()
 	collection := client.Database("mse").Collection("crawl")
-	var results []PageCrawl
 
-	// Only get documents from time onwards, if time is specified
-	filter := bson.D{}
-	if len(time) > 0 {
-		filter = bson.D{
-			{Key: "crawlDate", Value: bson.D{{Key: "$gte", Value: primitive.NewDateTimeFromTime(time[0])}}},
-		}
-	}
 	ctx := context.TODO()
 
+	filter := bson.D{}
 	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
-		return nil, fmt.Errorf("failed to execute find query: %s", err)
+		return fmt.Errorf("failed to execute find query: %s", err)
 	}
 	defer cursor.Close(ctx)
 
+	// store documents
 	for cursor.Next(ctx) {
 		var result PageCrawl
 		if err := cursor.Decode(&result); err != nil {
-			return nil, fmt.Errorf("failed to decode document: %s", err)
+			return fmt.Errorf("failed to decode document: %s", err)
 		}
-		results = append(results, result)
+		doc := NewDocument(result.ID.Hex(), result.BodyText)
+		i.Store(doc)
 	}
 
 	if err := cursor.Err(); err != nil {
-		return nil, fmt.Errorf("cursor error: %s", err)
+		return fmt.Errorf("cursor error: %s", err)
 	}
-
-	return results, nil
+	fmt.Println(time.Now(), " - Indexing finished")
+	return nil
 }

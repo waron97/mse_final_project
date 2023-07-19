@@ -1,22 +1,13 @@
-package util
+package indexer
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 )
 
 type Vector []float64
 
-func (v Vector) ToString() string {
-	result := ""
-	for _, e := range v {
-		result += fmt.Sprintf("%f|", e)
-	}
-	return result
-}
-
-// ToDo - Delete once BERT embeddings work
+// ToDo - replace with BERT embeddings
 func generateRandomVector(length int) Vector {
 	slice := make(Vector, length)
 	for i := 0; i < length; i++ {
@@ -25,8 +16,9 @@ func generateRandomVector(length int) Vector {
 	return slice
 }
 
+// ToDo - replace with BERT embeddings
 func getEmbeddings(text string) []Vector {
-	// ToDo - replace with BERT embeddings
+
 	vectorLength := 768
 	vectorAmount := 512
 
@@ -38,23 +30,23 @@ func getEmbeddings(text string) []Vector {
 	return results
 }
 
-func (s *Store) ComputeEmbedding(text string) []Vector {
+func GetEmbedding(text string) []Vector {
 	return getEmbeddings(text)
 }
 
-func (s *Store) ComputeAvgEmbedding(embeddings []Vector) (Vector, error) {
-	rows := len(embeddings)
+func GetAvgEmbedding(emb []Vector) (Vector, error) {
+	rows := len(emb)
 	if rows == 0 {
 		return nil, errors.New("embeddings empty")
 	}
 
-	columns := len(embeddings[0])
+	columns := len(emb[0])
 	averages := make(Vector, columns)
 
 	for col := 0; col < columns; col++ {
 		sum := 0.0
 		for row := 0; row < rows; row++ {
-			sum += embeddings[row][col]
+			sum += emb[row][col]
 		}
 		averages[col] = sum / float64(rows)
 	}

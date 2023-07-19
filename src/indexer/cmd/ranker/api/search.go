@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"indexer/internal/util"
+	"indexer/pkg/indexer"
 	"net/http"
-	"strconv"
 )
 
 func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,24 +19,34 @@ func (app *application) searchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get averaged query embedding
-	queryEmb := app.store.ComputeEmbedding(input.Query)
-	queryAvgEmb, err := app.store.ComputeAvgEmbedding(queryEmb)
+	queryEmb := indexer.GetEmbedding(input.Query)
+	queryAvgEmb, err := indexer.GetAvgEmbedding(queryEmb)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return
 	}
-	//fmt.Println(queryAvgEmb)
 
-	// ToDo - Retrieve top k documents from cluster
-	centroidId := app.store.ClusterMap.GetClosetCentroid(queryAvgEmb)
-	var centroidEmb []*util.DocEmbedding
-	err = util.ReadStructFromFile(app.store.ClusterMap.BaseDir+"/centroid_"+strconv.Itoa(centroidId), &centroidEmb)
+	centroid, err := app.index.GetClosestCentroidEmb(queryAvgEmb)
 	if err != nil {
 		fmt.Println(err)
 		app.serverErrorResponse(w, r, err)
 		return
 	}
-	fmt.Println(centroidEmb)
+
+	// ToDo - `centroid` is a []*DocEmbedding, consisting of `DocId` (id from MongoDB)
+	// ToDo - and `Embedding`, the averaged embedding of the document
+
+	for _, doc := range centroid {
+		var embeddings []indexer.Vector
+		err = indexer.ReadStructFromFile(app.index.GetDocIdPath(doc.DocId), &embeddings)
+		if err != nil {
+			fmt.Println(err)
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+		fmt.Println(len(embeddings), len(embeddings[0]))
+		break
+	}
 
 	resp := envelope{"documents": make([]string, 0), "query": input.Query}
 	err = app.writeJSON(w, http.StatusOK, resp, make(http.Header))

@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"indexer/internal/util"
+	"indexer/pkg/indexer"
 	"net/http"
 	"os"
 	"time"
@@ -17,8 +17,8 @@ type config struct {
 
 type application struct {
 	config config
-	logger *util.Logger
-	store  *util.Store
+	logger *indexer.Logger
+	index  *indexer.Index
 }
 
 func main() {
@@ -26,15 +26,15 @@ func main() {
 
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.db, "db", "mongodb://localhost:27017", "DB connection string")
-	flag.StringVar(&cfg.dir, "b", "./offline-index/", "Base directory for index storage")
+	flag.StringVar(&cfg.dir, "b", "./offline-indexer/", "Base directory for indexer storage")
 	flag.Parse()
 
-	logger := util.GetLogger()
-	store := util.New(cfg.dir, cfg.db, logger)
+	logger := indexer.GetLogger()
+	index := indexer.NewStore(cfg.dir)
 	app := &application{
 		config: cfg,
 		logger: logger,
-		store:  store,
+		index:  index,
 	}
 
 	pwd, err := os.Getwd()

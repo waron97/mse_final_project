@@ -97,7 +97,7 @@ services:
       - bert
       - db
     volumes:
-      - ./offline-index:/go/src/app/offline-index:rw
+      - ./offline-indexer:/go/src/app/offline-indexer:rw
       - ./indexer/src:/go/src/app/src:ro
     environment:
       - LOGS_APP_NAME=indexer
@@ -114,7 +114,7 @@ services:
       - bert
       - db
     volumes:
-      - ./offline-index:/go/src/app/offline-index:rw
+      - ./offline-indexer:/go/src/app/offline-indexer:rw
       - ./ranker/src:/go/src/app/src:ro
     ports:
       - "3000:5000"

@@ -1,4 +1,4 @@
-package util
+package indexer
 
 import "os"
 
@@ -15,7 +15,7 @@ func GetConstants() Constants {
 		logsAppName: os.Getenv("LOGS_APP_NAME"),
 		logsApiKey:  os.Getenv("LOGS_KEY"),
 		appEnv:      os.Getenv("APP_ENV"),
-		mongoUri:    os.Getenv("MONGO_URI"),
+		mongoUri:    "mongodb://localhost:27017",
 		logsUrl:     "http://logs:8080",
 	}
 }
