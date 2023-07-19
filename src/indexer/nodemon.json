@@ -1,4 +1,4 @@
 {
-  "exec": "go build -o ./app && ./app",
+  "exec": "go build -o ./app ./cmd/indexer && ./app",
   "ext": ".go"
 }
