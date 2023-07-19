@@ -1,6 +1,7 @@
 package encoding
 
 import (
+	"fmt"
 	"indexer/src/util/bert"
 	"indexer/src/util/core"
 	"indexer/src/util/db"
@@ -10,15 +11,32 @@ import (
 func processDocument(task db.PageCrawl) {
 	docId := task.ID.Hex()
 	constants := core.GetConstants()
-	docPath := constants.StorageDocsDir + "/" + docId
 	avgDocPath := constants.StorageAverageDocsDir + "/" + docId
 
-	emb := bert.GetEmbedding(task.BodyText)
-	avgEmb, err := bert.GetAvgEmbedding(emb)
+	encodedDocument := make([]bert.Vector, 0)
+
+	for _, passage := range task.Passages {
+		passageId := passage.ID.Hex()
+		passagePath := constants.StorageDocsDir + "/" + fmt.Sprintf("%s-%s", docId, passageId)
+		passageText := passage.Text
+
+		if len(passageText) == 0 {
+			continue
+		}
+
+		encoded := bert.GetEmbedding(passageText)
+		err := storage.WriteStructToFile(passagePath, encoded)
+		core.ErrPanic(err)
+		encodedDocument = append(encodedDocument, encoded...)
+	}
+
+	if len(encodedDocument) == 0 {
+		return
+	}
+
+	avgEmb, err := bert.GetAvgEmbedding(encodedDocument)
 	core.ErrPanic(err)
 
-	err = storage.WriteStructToFile(docPath, emb)
-	core.ErrPanic(err)
 	err = storage.WriteStructToFile(avgDocPath, avgEmb)
 	core.ErrPanic(err)
 
