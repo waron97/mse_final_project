@@ -17,7 +17,7 @@ func processDocument(task db.PageCrawl) {
 
 	os.MkdirAll(docPath, os.ModePerm)
 
-	encodedDocument := make([]bert.Vector, 0)
+	encodedDocument := make([]core.Vector, 0)
 
 	for _, passage := range task.Passages {
 		passageId := passage.ID.Hex()
