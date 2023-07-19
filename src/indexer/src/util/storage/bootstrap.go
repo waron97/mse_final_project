@@ -10,4 +10,5 @@ func CreateStorageDirs() {
 	os.MkdirAll(constants.StorageBaseDir, os.ModePerm)
 	os.MkdirAll(constants.StorageDocsDir, os.ModePerm)
 	os.MkdirAll(constants.StorageAverageDocsDir, os.ModePerm)
+	os.MkdirAll(constants.StorageClustersDir, os.ModePerm)
 }
