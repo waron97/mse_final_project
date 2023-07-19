@@ -83,6 +83,7 @@ public class Spider implements Runnable {
                 return;
             }
 
+            Thread.sleep(500);
             doc = Jsoup.connect(url).get();
 
 
