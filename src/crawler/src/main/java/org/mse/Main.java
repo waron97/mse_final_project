@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        Integer numThreads = 8;
+        Integer numThreads = 9;
         List<Thread> threads = new ArrayList<>();
         Frontier frontier = new Frontier(Constants.frontierUrl);
 

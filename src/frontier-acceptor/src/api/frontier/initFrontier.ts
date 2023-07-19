@@ -33,16 +33,18 @@ const initialPages = [
     url: "https://www.swtue.de/",
     priority: 8,
   },
+  {
+    url: "https://www.tuepedia.de/",
+    priority: 9,
+  },
 ];
 
 export default async function initFrontier() {
   const pages = await Frontier.getList();
-  if (pages.length !== 0) {
-    // frontier already initialized
-    return;
-  }
-
   for (const page of initialPages) {
+    if (pages.some((p) => p.url === page.url)) {
+      continue;
+    }
     await Frontier.create(page);
   }
 }
