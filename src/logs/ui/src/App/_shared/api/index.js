@@ -58,7 +58,7 @@ export function getLogs(params, apiKey) {
 }
 
 export function getAppIds(apiKey) {
-    const url = getApiUrl('/logs/indexer-ids')
+    const url = getApiUrl('/logs/app-ids')
     return sendRequest(url, 'GET', null, apiKey)
 }
 
