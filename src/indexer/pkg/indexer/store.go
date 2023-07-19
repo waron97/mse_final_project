@@ -62,17 +62,13 @@ func (i *Index) getClusterPath() string {
 	return i.indexPath + "/cluster"
 }
 
-func (i *Index) getInfoPath() string {
-	return i.indexPath + "/info.indexer"
-}
-
 func (i *Index) getClusterMapPath() string {
 	return i.indexPath + "/cluster/clusterMap.indexer"
 }
 
 // Store store document, averaged document to disk, indexer if available
 func (i *Index) Store(doc *Document) {
-	fmt.Println("[Store] storing document", doc.Id)
+	// fmt.Println("[Store] storing document", doc.Id)
 	docPath := i.getDocPath() + "/" + doc.Id
 	avgDocPath := i.getAvgDocPath() + "/" + doc.Id
 
