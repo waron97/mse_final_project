@@ -1,5 +1,4 @@
 services:
-
   logs:
     build: logs
     container_name: logs
@@ -95,8 +94,8 @@ services:
       - bert
       - db
     volumes:
-      - ./offline-indexer:/go/cmd/indexer/offline-indexer:rw
-      - ./indexer/cmd:/go/cmd/indexer/cmd:ro
+      - ./offline-index:/go/src/app/offline-index:rw
+      - ./indexer/src:/go/src/app/src:ro
     environment:
       - LOGS_APP_NAME=indexer
       - APP_ENV=${APP_ENV}
@@ -112,7 +111,7 @@ services:
       - bert
       - db
     volumes:
-      - ./offline-indexer:/go/src/app/offline-indexer:rw
+      - ./offline-indexer:/go/src/app/offline-index:rw
       - ./ranker/src:/go/src/app/src:ro
     ports:
       - "3000:5000"
