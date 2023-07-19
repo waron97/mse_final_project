@@ -31,8 +31,8 @@ func GetConstants() Constants {
 		StorageDocsDir:        StorageBaseDir + "/documents",
 		StorageAverageDocsDir: StorageBaseDir + "/average-documents",
 		StorageClustersDir:    StorageBaseDir + "/clusters",
-		StorageClusterMapPath: StorageBaseDir + "/cluster/clusterMap.index",
+		StorageClusterMapPath: StorageBaseDir + "/clusters/clusterMap.index",
 
-		ClusterCount: 10,
+		ClusterCount: 100,
 	}
 }
