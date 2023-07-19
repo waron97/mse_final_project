@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from typing import Iterator
 
-from app.util.types import PageData
+from types import PageData
 
 connstring = "mongodb://db:27017"
 client = MongoClient(connstring)

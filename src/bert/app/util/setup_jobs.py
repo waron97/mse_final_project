@@ -1,5 +1,5 @@
-from app.util.fs import create_out_folder
-from app.util.logger import Logger
+from fs import create_out_folder
+from logger import Logger
 
 
 def setup_jobs():

@@ -1,7 +1,7 @@
 import time
 import requests
 
-from app.util.constants import LOGS_API_KEY, LOGS_APP_NAME, LOGS_URL
+from constants import LOGS_API_KEY, LOGS_APP_NAME, LOGS_URL
 
 
 class Logger:
