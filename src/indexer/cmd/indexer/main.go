@@ -73,7 +73,7 @@ func runIndexStore(wg *sync.WaitGroup, i *indexer.Index) {
 
 func main() {
 	var cfg config
-	flag.StringVar(&cfg.path, "path", "./testIndex", "Index Path")
+	flag.StringVar(&cfg.path, "path", "./offline-index", "Index Path")
 	flag.IntVar(&cfg.k, "k", 16, "Cluster amount for kmeans")
 	flag.IntVar(&cfg.n, "n", 5000, "document sample size for kmeans")
 	flag.BoolVar(&cfg.c, "c", false, "(re)build index cluster")

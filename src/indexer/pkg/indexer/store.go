@@ -3,14 +3,15 @@ package indexer
 import (
 	"errors"
 	"fmt"
-	"github.com/muesli/clusters"
-	"github.com/muesli/kmeans"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/muesli/clusters"
+	"github.com/muesli/kmeans"
 )
 
 type DocEmbedding struct {
@@ -71,6 +72,7 @@ func (i *Index) getClusterMapPath() string {
 
 // Store store document, averaged document to disk, indexer if available
 func (i *Index) Store(doc *Document) {
+	fmt.Println("[Store] storing document", doc.Id)
 	docPath := i.getDocPath() + "/" + doc.Id
 	avgDocPath := i.getAvgDocPath() + "/" + doc.Id
 
@@ -99,6 +101,7 @@ func (i *Index) Store(doc *Document) {
 
 // BuildCluster (Re)build the indexer, by calculating clusters + centroids
 func (i *Index) BuildCluster(n, k int) {
+	fmt.Println("[BuildCluster] starting clustering routine")
 	files, err := ioutil.ReadDir(i.getAvgDocPath())
 	errPanic(err)
 
@@ -114,6 +117,8 @@ func (i *Index) BuildCluster(n, k int) {
 
 		embeddings[j] = emb
 	}
+
+	fmt.Println("[BuildCluster] embeddings loaded")
 
 	i.Centroids = cluster(embeddings, k)
 

@@ -1,3 +1,4 @@
 ./app
 ./offline-index
 ./cmd/indexer/offline-index
+.vscode

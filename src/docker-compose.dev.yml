@@ -37,35 +37,35 @@ services:
       - ./mongodata:/data/db
     command: --logpath /dev/null
 
-  frontier-acceptor:
-    build: ./frontier-acceptor
-    container_name: frontier-acceptor
-    restart: always
-    ports:
-      - "8080:3000"
-    networks:
-      - app-network
-    depends_on:
-      - db
-    volumes:
-      - ./frontier-acceptor/src:/usr/app/src:ro
-    environment:
-      - LOGS_APP_NAME=frontier-acceptor
-      - APP_ENV=${APP_ENV}
-      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
-      - MONGO_URI=mongodb://db:27017
+  # frontier-acceptor:
+  #   build: ./frontier-acceptor
+  #   container_name: frontier-acceptor
+  #   restart: always
+  #   ports:
+  #     - "8080:3000"
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - ./frontier-acceptor/src:/usr/app/src:ro
+  #   environment:
+  #     - LOGS_APP_NAME=frontier-acceptor
+  #     - APP_ENV=${APP_ENV}
+  #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+  #     - MONGO_URI=mongodb://db:27017
 
-  crawler:
-    build: ./crawler
-    container_name: crawler
-    networks:
-      - app-network
-    depends_on:
-      - frontier-acceptor
-    environment:
-      - LOGS_APP_NAME=crawler
-      - APP_ENV=${APP_ENV}
-      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+  # crawler:
+  #   build: ./crawler
+  #   container_name: crawler
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - frontier-acceptor
+  #   environment:
+  #     - LOGS_APP_NAME=crawler
+  #     - APP_ENV=${APP_ENV}
+  #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
 
   bert:
@@ -111,7 +111,7 @@ services:
       - bert
       - db
     volumes:
-      - ./offline-indexer:/go/src/app/offline-index:rw
+      - ./offline-index:/go/src/app/offline-index:rw
       - ./ranker/src:/go/src/app/src:ro
     ports:
       - "3000:5000"

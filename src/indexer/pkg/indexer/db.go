@@ -57,6 +57,7 @@ func GetCrawlPage() PageCrawl {
 }
 
 func StoreAllCrawlPages(i *Index) error {
+	fmt.Println("[StoreAllCrawlPages] routine start")
 	client := getClient()
 	collection := client.Database("mse").Collection("crawl")
 
