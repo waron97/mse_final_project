@@ -19,8 +19,8 @@ func generateRandomVector(length int) Vector {
 // ToDo - replace with BERT embeddings
 func getEmbeddings(text string) []Vector {
 
-	vectorLength := 768
-	vectorAmount := 512
+	vectorLength := 100
+	vectorAmount := 60
 
 	results := make([]Vector, vectorAmount)
 	for i := 0; i < len(results); i++ {
