@@ -8,6 +8,10 @@ from app.api.blueprint import api_blueprint
 # from app.util.setup_jobs import setup_jobs
 from app.util.constants import MAX_QUERY_SIZE, BERT_MODEL
 
+# Instantiate the tokenizer and model in the global scope
+tokenizer = BertTokenizer.from_pretrained(BERT_MODEL, pad_token="[MASK]")
+model = BertModel.from_pretrained(BERT_MODEL)
+
 # setup_jobs()
 
 app = Flask(__name__)
@@ -24,6 +28,7 @@ def process_text():
     Output: {embeddings: float[][]}
     """
     text = request.json["text"]
+
     if request.json["type"] == 'query':
         result = get_bert_embedding_query(text)
     elif request.json["type"] == 'document':
@@ -32,9 +37,6 @@ def process_text():
 
 
 def get_bert_embedding_query(text):
-    tokenizer = BertTokenizer.from_pretrained(BERT_MODEL, pad_token='[MASK]')
-    model = BertModel.from_pretrained(BERT_MODEL)
-
     encoded_input = tokenizer.encode_plus(
         text,
         add_special_tokens=True,
@@ -54,9 +56,6 @@ def get_bert_embedding_query(text):
 
 
 def get_bert_embedding_document(text, max_input_size=512):
-    tokenizer = BertTokenizer.from_pretrained(BERT_MODEL, pad_token="[MASK]")
-    model = BertModel.from_pretrained(BERT_MODEL)
-
     words = text.split()
     chunks = []
     current_chunk = ""
