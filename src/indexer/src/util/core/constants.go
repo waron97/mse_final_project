@@ -8,6 +8,7 @@ type Constants struct {
 	AppEnv      string
 	LogsUrl     string
 	MongoUri    string
+	BertUri     string
 
 	StorageBaseDir        string
 	StorageDocsDir        string
@@ -26,6 +27,7 @@ func GetConstants() Constants {
 		AppEnv:      os.Getenv("APP_ENV"),
 		MongoUri:    os.Getenv("MONGO_URI"),
 		LogsUrl:     "http://logs:8080",
+		BertUri:     "http://bert:5000",
 
 		StorageBaseDir:        StorageBaseDir,
 		StorageDocsDir:        StorageBaseDir + "/documents",
