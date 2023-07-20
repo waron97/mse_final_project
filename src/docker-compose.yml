@@ -80,6 +80,7 @@ services:
     volumes:
       - ./bert/app:/usr/app/app:ro
       - ./bert/out:/usr/app/out:rw
+      - ./bert-cache:/root/.cache:rw
     environment:
       - BERT_MODEL=distilbert-base-multilingual-cased
       - MAX_QUERY_SIZE=50

@@ -28,12 +28,16 @@ def process_text():
     Output: {embeddings: float[][]}
     """
     text = request.json["text"]
-
-    if request.json["type"] == 'query':
-        result = get_bert_embedding_query(text)
-    elif request.json["type"] == 'document':
-        result = get_bert_embedding_document(text)
-    return jsonify({"embeddings": result})
+    try:
+        if request.json["type"] == 'query':
+            result = get_bert_embedding_query(text)
+        elif request.json["type"] == 'document':
+            result = get_bert_embedding_document(text)
+        return jsonify({"embeddings": result})
+    except Exception as e:
+        print(request.json)
+        print(e)
+        raise e
 
 
 @app.route("/health", methods=["GET"])

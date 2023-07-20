@@ -10,7 +10,10 @@ import (
 
 func getCrawlPageFilter() bson.D {
 	filter := bson.D{
-		{Key: "indexedDate", Value: bson.D{{Key: "$exists", Value: false}}},
+		{Key: "$and", Value: bson.A{
+			bson.D{{Key: "indexedDate", Value: bson.D{{Key: "$exists", Value: false}}}},
+			bson.D{{Key: "relevant", Value: true}},
+		}},
 	}
 
 	return filter

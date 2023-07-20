@@ -28,7 +28,10 @@ func processDocument(task db.PageCrawl) {
 			continue
 		}
 
-		encoded := bert.GetEmbedding(passageText)
+		encoded := bert.GetEmbeddings(passageText)
+		if encoded == nil {
+			continue
+		}
 		err := storage.WriteStructToFile(passagePath, encoded)
 		core.ErrPanic(err)
 		encodedDocument = append(encodedDocument, encoded...)

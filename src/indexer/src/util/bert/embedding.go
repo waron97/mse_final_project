@@ -1,36 +1,56 @@
 package bert
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"indexer/src/util/core"
-	"math/rand"
+	"io"
+	"net/http"
 )
 
-// ToDo - replace with BERT embeddings
-func generateRandomVector(length int) core.Vector {
-	slice := make(core.Vector, length)
-	for i := 0; i < length; i++ {
-		slice[i] = rand.Float64()
-	}
-	return slice
+type response struct {
+	Embeddings []core.Vector `json:"embeddings"`
+}
+
+type request struct {
+	Text string `json:"text"`
+	Type string `json:"type"`
 }
 
 // ToDo - replace with BERT embeddings
-func getEmbeddings(text string) []core.Vector {
-
-	vectorLength := 100
-	vectorAmount := 60
-
-	results := make([]core.Vector, vectorAmount)
-	for i := 0; i < len(results); i++ {
-		results[i] = generateRandomVector(vectorLength)
+func GetEmbeddings(text string) []core.Vector {
+	constants := core.GetConstants()
+	body := request{
+		Text: text,
+		Type: "document",
 	}
-
-	return results
-}
-
-func GetEmbedding(text string) []core.Vector {
-	return getEmbeddings(text)
+	jsonPayload, err := json.Marshal(body)
+	if err != nil {
+		return nil
+	}
+	bodyReader := bytes.NewReader(jsonPayload)
+	req, err := http.NewRequest(http.MethodPost, constants.BertUri+"/encode", bodyReader)
+	req.Header.Set("Content-Type", "application/json")
+	if err != nil {
+		return nil
+	}
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return nil
+	}
+	defer res.Body.Close()
+	respBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil
+	}
+	var resp response
+	err = json.Unmarshal(respBody, &resp)
+	if err != nil {
+		return nil
+	}
+	return resp.Embeddings
 }
 
 func GetAvgEmbedding(emb []core.Vector) (core.Vector, error) {
@@ -50,4 +70,20 @@ func GetAvgEmbedding(emb []core.Vector) (core.Vector, error) {
 		averages[col] = sum / float64(rows)
 	}
 	return averages, nil
+}
+
+func IsAlive() bool {
+	constants := core.GetConstants()
+	req, err := http.NewRequest(http.MethodGet, constants.BertUri+"/health", nil)
+	if err != nil {
+		return false
+	}
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return false
+	}
+	defer res.Body.Close()
+	return res.StatusCode == http.StatusOK
+
 }

@@ -3,3 +3,4 @@ offline-index
 postgres-data
 .env
 prod
+bert-cache

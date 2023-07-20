@@ -75,6 +75,7 @@ services:
     volumes:
       - ./bert/app:/usr/app/app:ro
       - ./bert/out:/usr/app/out:rw
+      - ./bert-cache:/root/.cache:rw
     ports:
       - "6000:5000"
     environment:
