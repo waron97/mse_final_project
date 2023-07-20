@@ -1,4 +1,4 @@
-from transformers import BertTokenizer, BertModel
+from transformers import DistilBertTokenizer, DistilBertModel
 import torch
 import string
 
@@ -9,8 +9,8 @@ from app.api.blueprint import api_blueprint
 from app.util.constants import MAX_QUERY_SIZE, BERT_MODEL
 
 # Instantiate the tokenizer and model in the global scope
-tokenizer = BertTokenizer.from_pretrained(BERT_MODEL, pad_token="[MASK]")
-model = BertModel.from_pretrained(BERT_MODEL)
+tokenizer = DistilBertTokenizer.from_pretrained(BERT_MODEL, pad_token="[MASK]")
+model = DistilBertModel.from_pretrained(BERT_MODEL)
 
 # setup_jobs()
 
@@ -94,15 +94,19 @@ def get_bert_embedding_document(text, max_input_size=512):
         # Get the positions of punctuations from each chunk with considering special tokens
         punctuation_positions = __get_punctuation_positions(chunk, tokenizer)
 
-        punctuation_positions = [i + last_chunk_tokens_length for i in punctuation_positions]
+        punctuation_positions = [
+            i + last_chunk_tokens_length for i in punctuation_positions]
         punctuation_positions_list.extend(punctuation_positions)
         # Update variable "last_chunk_tokens_length" with the size of the current chunk (basing on tokens) for
         # computing punctuation positions in the next chunk.
-        last_chunk_tokens_length = len(tokenizer.tokenize(chunk)) + 2  # two special tokens for each chunk in BERT
+        # two special tokens for each chunk in BERT
+        last_chunk_tokens_length = len(tokenizer.tokenize(chunk)) + 2
 
-    concatenated_embeddings = [emb for chunk in embeddings_list for emb in chunk]
+    concatenated_embeddings = [
+        emb for chunk in embeddings_list for emb in chunk]
     # Remove punctuation embeddings
-    __remove_elements_by_index(concatenated_embeddings, punctuation_positions_list)
+    __remove_elements_by_index(
+        concatenated_embeddings, punctuation_positions_list)
 
     return concatenated_embeddings
 
