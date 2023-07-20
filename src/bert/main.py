@@ -36,6 +36,11 @@ def process_text():
     return jsonify({"embeddings": result})
 
 
+@app.route("/health", methods=["GET"])
+def health():
+    return "OK"
+
+
 def get_bert_embedding_query(text):
     encoded_input = tokenizer.encode_plus(
         text,
