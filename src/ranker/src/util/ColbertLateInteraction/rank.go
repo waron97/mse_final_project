@@ -49,20 +49,22 @@ func RankNoConcurrency(documents []util.Document, query []util.Vector) []RankRes
 // ------------------------------------------------------------
 
 func processDocumentNoConcurrency(document util.Document, query []util.Vector, channel chan RankResultItem) {
-	var documentScore float64 = 0.0
 	var bestPassageId string = ""
 	var bestPassageScore float64 = 0.0
 
+	fullDocument := []util.Vector{}
+	for _, passage := range document.Passages {
+		fullDocument = append(fullDocument, passage.Embeddings...)
+	}
+	documentScore := GetScore(fullDocument, query)
+
 	for _, passage := range document.Passages {
 		score := GetScore(passage.Embeddings, query)
-		documentScore += score
 		if score > bestPassageScore {
 			bestPassageScore = score
 			bestPassageId = passage.PassageId
 		}
 	}
-
-	documentScore = documentScore / float64(len(document.Passages))
 
 	item := RankResultItem{
 		documentId:    document.DocId,
