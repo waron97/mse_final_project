@@ -67,7 +67,6 @@ services:
   #     - APP_ENV=${APP_ENV}
   #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
-
   bert:
     build: ./bert
     container_name: bert
@@ -79,12 +78,12 @@ services:
     ports:
       - "6000:5000"
     environment:
-      - BERT_MODEL=bert-base-uncased
+      - BERT_MODEL=distilbert-base-multilingual-cased
       - MAX_QUERY_SIZE=50
       - LOGS_APP_NAME=bert
       - APP_ENV=${APP_ENV}
       - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
-  
+
   indexer:
     build: ./indexer
     container_name: indexer
@@ -124,4 +123,3 @@ services:
 networks:
   app-network:
     driver: bridge
-
