@@ -22,7 +22,7 @@ func RunEncodingTask() {
 
 	for i := 0; i < documentCount; i++ {
 		<-results
-		if i%100 == 0 {
+		if i%100 == 0 && i != 0 {
 			timeElapsed := time.Since(now)
 			fmt.Printf("[RunEncodingTask] %d/%d :: %s\n", i, documentCount, timeElapsed)
 		}
