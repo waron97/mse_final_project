@@ -6,10 +6,11 @@ import (
 
 func getInteractionMatrix(doc1 []util.Vector, doc2 []util.Vector) [][]float64 {
 	var result [][]float64
-	d := len(doc1)
-	for i := 0; i < d; i++ {
+	rows := len(doc1)
+	cols := len(doc2)
+	for i := 0; i < rows; i++ {
 		var row []float64
-		for j := 0; j < d; j++ {
+		for j := 0; j < cols; j++ {
 			row = append(row, doc1[i].CosSim(doc2[j]))
 		}
 		result = append(result, row)

@@ -1,21 +1,40 @@
-package util
+package core
 
 import "os"
 
 type Constants struct {
-	logsAppName string
-	logsApiKey  string
-	appEnv      string
-	logsUrl     string
-	mongoUri    string
+	LogsAppName string
+	LogsApiKey  string
+	AppEnv      string
+	LogsUrl     string
+	MongoUri    string
+	BertUri     string
+
+	StorageBaseDir        string
+	StorageDocsDir        string
+	StorageAverageDocsDir string
+	StorageClustersDir    string
+	StorageClusterMapPath string
+
+	ClusterCount int
 }
 
 func GetConstants() Constants {
+	const StorageBaseDir = "./offline-index"
 	return Constants{
-		logsAppName: os.Getenv("LOGS_APP_NAME"),
-		logsApiKey:  os.Getenv("LOGS_KEY"),
-		appEnv:      os.Getenv("APP_ENV"),
-		mongoUri:    os.Getenv("MONGO_URI"),
-		logsUrl:     "http://logs:8080",
+		LogsAppName: os.Getenv("LOGS_APP_NAME"),
+		LogsApiKey:  os.Getenv("LOGS_KEY"),
+		AppEnv:      os.Getenv("APP_ENV"),
+		MongoUri:    os.Getenv("MONGO_URI"),
+		LogsUrl:     "http://logs:8080",
+		BertUri:     "http://host.docker.internal:8888",
+
+		StorageBaseDir:        StorageBaseDir,
+		StorageDocsDir:        StorageBaseDir + "/documents",
+		StorageAverageDocsDir: StorageBaseDir + "/average-documents",
+		StorageClustersDir:    StorageBaseDir + "/clusters",
+		StorageClusterMapPath: StorageBaseDir + "/clusters/clusterMap.index",
+
+		ClusterCount: 100,
 	}
 }

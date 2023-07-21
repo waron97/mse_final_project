@@ -1,4 +1,4 @@
-package util
+package core
 
 import (
 	"bytes"
@@ -19,7 +19,7 @@ type Log struct {
 
 func (l Logger) isAlive() bool {
 	constants := GetConstants()
-	_, err := http.Get(constants.logsUrl)
+	_, err := http.Get(constants.LogsUrl)
 	return err == nil
 }
 
@@ -35,7 +35,7 @@ func (l Logger) send(level string, location string, message string, data interfa
 		Location: location,
 		Message:  message,
 		Data:     data,
-		AppId:    constants.logsAppName,
+		AppId:    constants.LogsAppName,
 	}
 
 	payload, marshalErr := json.Marshal(body)
@@ -44,9 +44,9 @@ func (l Logger) send(level string, location string, message string, data interfa
 		return false
 	}
 
-	req, err := http.NewRequest("POST", constants.logsUrl+"/logs", bytes.NewReader(payload))
+	req, err := http.NewRequest("POST", constants.LogsAppName+"/logs", bytes.NewReader(payload))
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "apiKey "+constants.logsApiKey)
+	req.Header.Set("Authorization", "apiKey "+constants.LogsApiKey)
 
 	if err != nil {
 		return false

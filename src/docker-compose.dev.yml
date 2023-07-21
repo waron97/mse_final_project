@@ -67,23 +67,23 @@ services:
   #     - APP_ENV=${APP_ENV}
   #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
-  bert:
-    build: ./bert
-    container_name: bert
-    networks:
-      - app-network
-    volumes:
-      - ./bert/app:/usr/app/app:ro
-      - ./bert/out:/usr/app/out:rw
-      - ./bert-cache:/root/.cache:rw
-    ports:
-      - "6000:5000"
-    environment:
-      - BERT_MODEL=distilbert-base-multilingual-cased
-      - MAX_QUERY_SIZE=50
-      - LOGS_APP_NAME=bert
-      - APP_ENV=${APP_ENV}
-      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+  # bert:
+  #   build: ./bert
+  #   container_name: bert
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - ./bert/app:/usr/app/app:ro
+  #     - ./bert/out:/usr/app/out:rw
+  #     - ./bert-cache:/root/.cache:rw
+  #   ports:
+  #     - "6000:5000"
+  #   environment:
+  #     - BERT_MODEL=distilbert-base-multilingual-cased
+  #     - MAX_QUERY_SIZE=50
+  #     - LOGS_APP_NAME=bert
+  #     - APP_ENV=${APP_ENV}
+  #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
   indexer:
     build: ./indexer
@@ -91,7 +91,6 @@ services:
     networks:
       - app-network
     depends_on:
-      - bert
       - db
     volumes:
       - ./offline-index:/go/src/app/offline-index:rw
@@ -108,7 +107,6 @@ services:
     networks:
       - app-network
     depends_on:
-      - bert
       - db
     volumes:
       - ./offline-index:/go/src/app/offline-index:rw

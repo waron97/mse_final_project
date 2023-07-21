@@ -3,15 +3,15 @@ package ColbertLateInteraction
 import "fmt"
 
 type RankResultItem struct {
-	documentId    string
-	documentScore float64
-	bestPassageId string
+	DocumentId    string  `json:"documentId"`
+	DocumentScore float64 `json:"documentScore"`
+	BestPassageId string  `json:"bestPassageId"`
 }
 
 func (r RankResultItem) String() string {
 	return fmt.Sprintf(
 		"{RankResultItem [documentId=%v, documentScore=%v, bestPassageId=%v]}",
-		r.documentId, r.documentScore, r.bestPassageId)
+		r.DocumentId, r.DocumentScore, r.BestPassageId)
 }
 
 type ByDocumentScore []RankResultItem
@@ -25,5 +25,5 @@ func (s ByDocumentScore) Swap(i, j int) {
 }
 
 func (s ByDocumentScore) Less(i, j int) bool {
-	return s[i].documentScore < s[j].documentScore
+	return s[i].DocumentScore < s[j].DocumentScore
 }

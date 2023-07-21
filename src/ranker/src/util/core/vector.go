@@ -1,4 +1,4 @@
-package util
+package core
 
 import (
 	"fmt"
@@ -38,6 +38,17 @@ func (v Vector) Norm() float64 {
 
 func (v Vector) CosSim(other Vector) float64 {
 	return v.Dot(other) / (v.Norm() * other.Norm())
+}
+
+func (v Vector) EuclideanDistance(other Vector) float64 {
+	if len(v) != len(other) {
+		panic(fmt.Sprintf("Euclidean Distance expected vectors of equal length, got %d and %d", len(v), len(other)))
+	}
+	var result float64 = 0.0
+	for i, e := range v {
+		result += math.Pow(e-other[i], 2)
+	}
+	return math.Sqrt(result)
 }
 
 func GetRandomVector(dims int) Vector {
