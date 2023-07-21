@@ -8,6 +8,7 @@ import (
 	"ranker/src/util/core"
 	"ranker/src/util/networking"
 	"ranker/src/util/prerank"
+	"time"
 )
 
 type RankMeta struct {
@@ -24,6 +25,7 @@ type RankResponse struct {
 var clusters []prerank.Cluster = prerank.ReadClusters()
 
 func RankHandler(w http.ResponseWriter, r *http.Request) {
+	now := time.Now()
 	skip, limit, page := networking.Pagination(r)
 	query := r.URL.Query().Get("query")
 	if query == "" {
@@ -32,11 +34,16 @@ func RankHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	queryEmbeddings := bert.GetEmbeddings(query)
+	core.MeasureTime(now, "BERT")
 	topk := prerank.Prerank(queryEmbeddings, clusters, 100)
+	core.MeasureTime(now, "Prerank")
 	topkDocs := core.NewDocumentsFromIds(topk)
+	core.MeasureTime(now, "NewDocumentsFromIds")
 	ranking := ColbertLateInteraction.Rank(topkDocs, queryEmbeddings)
+	core.MeasureTime(now, "ColbertLateInteraction")
 	ranking = ranking[skip : skip+limit]
 	mapped := networking.MapRankingResults(ranking)
+	core.MeasureTime(now, "MapRankingResults")
 	payload := RankResponse{
 		Data: mapped,
 		Meta: RankMeta{

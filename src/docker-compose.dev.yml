@@ -93,7 +93,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./offline-index:/go/src/app/offline-index:rw
+      - /Volumes/Aron's Hard Drive/mse/offline-index:/go/src/app/offline-index:rw
       - ./indexer/src:/go/src/app/src:ro
     environment:
       - LOGS_APP_NAME=indexer
@@ -109,7 +109,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./offline-index:/go/src/app/offline-index:rw
+      - /Volumes/Aron's Hard Drive/mse/offline-index:/go/src/app/offline-index:rw
       - ./ranker/src:/go/src/app/src:ro
     ports:
       - "3005:5000"
