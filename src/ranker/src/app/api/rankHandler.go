@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"ranker/src/util/ColbertLateInteraction"
 	"ranker/src/util/bert"
+	"ranker/src/util/cache"
 	"ranker/src/util/core"
 	"ranker/src/util/networking"
 	"ranker/src/util/prerank"
@@ -23,6 +24,7 @@ type RankResponse struct {
 }
 
 var clusters []prerank.Cluster = prerank.ReadClusters()
+var responseCache *cache.Cache = cache.NewCache()
 
 func RankHandler(w http.ResponseWriter, r *http.Request) {
 	now := time.Now()
@@ -33,14 +35,23 @@ func RankHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Query is empty"))
 		return
 	}
-	queryEmbeddings := bert.GetEmbeddings(query)
-	core.MeasureTime(now, "BERT")
-	topk := prerank.Prerank(queryEmbeddings, clusters, 100)
-	core.MeasureTime(now, "Prerank")
-	topkDocs := core.NewDocumentsFromIds(topk)
-	core.MeasureTime(now, "NewDocumentsFromIds")
-	ranking := ColbertLateInteraction.Rank(topkDocs, queryEmbeddings)
-	core.MeasureTime(now, "ColbertLateInteraction")
+	var ranking []ColbertLateInteraction.RankResultItem
+	if cachedItem, ok := responseCache.Get(query); ok {
+		ranking = cachedItem.([]ColbertLateInteraction.RankResultItem)
+		core.MeasureTime(now, "Cache")
+	} else {
+		queryEmbeddings := bert.GetEmbeddings(query)
+		core.MeasureTime(now, "BERT")
+		topk := prerank.Prerank(queryEmbeddings, clusters, 100)
+		core.MeasureTime(now, "Prerank")
+		topkDocs := core.NewDocumentsFromIds(topk)
+		core.MeasureTime(now, "NewDocumentsFromIds")
+		ranking = ColbertLateInteraction.Rank(topkDocs, queryEmbeddings)
+		core.MeasureTime(now, "ColbertLateInteraction")
+		responseCache.Set(query, ranking)
+	}
+	numDocs := len(ranking)
+
 	ranking = ranking[skip : skip+limit]
 	mapped := networking.MapRankingResults(ranking)
 	core.MeasureTime(now, "MapRankingResults")
@@ -49,7 +60,7 @@ func RankHandler(w http.ResponseWriter, r *http.Request) {
 		Meta: RankMeta{
 			Page:  page,
 			Limit: limit,
-			Total: len(topkDocs),
+			Total: numDocs,
 		}}
 	w.Header().Set("Content-Type", "application/json")
 	body, err := json.MarshalIndent(payload, "", "  ")
