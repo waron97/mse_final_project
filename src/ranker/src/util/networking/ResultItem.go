@@ -5,7 +5,8 @@ type ResultItem struct {
 	DocumentScore float64 `json:"documentScore"`
 	BestPassageId string  `json:"bestPassageId"`
 
-	DocumentTitle   string `json:"documentTitle"`
-	BestPassageText string `json:"bestPassageText"`
-	DocumentUrl     string `json:"documentUrl"`
+	DocumentTitle       string `json:"documentTitle"`
+	DocumentDescription string `json:"documentDescription"`
+	BestPassageText     string `json:"bestPassageText"`
+	DocumentUrl         string `json:"documentUrl"`
 }

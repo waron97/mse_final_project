@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"ranker/src/app/api"
 	util "ranker/src/util/core"
+
+	"github.com/rs/cors"
 )
 
 func RunTasks() {
@@ -15,7 +17,7 @@ func RunTasks() {
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", 5000),
-		Handler: handler,
+		Handler: cors.Default().Handler(handler),
 	}
 	server.ListenAndServe()
 }

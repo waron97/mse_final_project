@@ -14,9 +14,10 @@ func MapRankingResults(result []ColbertLateInteraction.RankResultItem) []ResultI
 			DocumentScore: item.DocumentScore,
 			BestPassageId: item.BestPassageId,
 
-			DocumentTitle:   page.Title,
-			DocumentUrl:     page.URL,
-			BestPassageText: page.GetPassage(item.BestPassageId),
+			DocumentTitle:       page.Title,
+			DocumentDescription: page.Description,
+			DocumentUrl:         page.URL,
+			BestPassageText:     page.GetPassage(item.BestPassageId),
 		})
 	}
 	return mapped
