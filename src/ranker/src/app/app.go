@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"ranker/src/app/api"
-	util "ranker/src/util/core"
 
 	"github.com/rs/cors"
 )
 
 func RunTasks() {
-	util.GetLogger().Info("Bootstrap", "Hello from GO ranker!", nil)
 	handler := http.NewServeMux()
 	handler.HandleFunc("/rank", api.RankHandler)
 	handler.HandleFunc("/health", api.HealthHandler)

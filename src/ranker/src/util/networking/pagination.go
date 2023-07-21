@@ -5,12 +5,13 @@ import (
 	"strconv"
 )
 
-func Pagination(r *http.Request) (int, int) {
+func Pagination(r *http.Request) (int, int, int) {
 	query := r.URL.Query()
 	page_ := query.Get("page")
 	limit_ := query.Get("limit")
 	skip := 0
 	limit := 10
+	pageInt := 1
 	if limit_ != "" {
 		limitInt, err := strconv.Atoi(limit_)
 		if err != nil {
@@ -25,6 +26,7 @@ func Pagination(r *http.Request) (int, int) {
 			page = 1
 		}
 		skip = (page - 1) * limit
+		pageInt = page
 	}
-	return skip, limit
+	return skip, limit, pageInt
 }

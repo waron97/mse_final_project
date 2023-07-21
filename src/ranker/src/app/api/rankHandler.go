@@ -24,7 +24,7 @@ type RankResponse struct {
 var clusters []prerank.Cluster = prerank.ReadClusters()
 
 func RankHandler(w http.ResponseWriter, r *http.Request) {
-	skip, limit := networking.Pagination(r)
+	skip, limit, page := networking.Pagination(r)
 	query := r.URL.Query().Get("query")
 	if query == "" {
 		w.WriteHeader(http.StatusBadRequest)
@@ -40,9 +40,9 @@ func RankHandler(w http.ResponseWriter, r *http.Request) {
 	payload := RankResponse{
 		Data: mapped,
 		Meta: RankMeta{
-			Page:  skip,
+			Page:  page,
 			Limit: limit,
-			Total: len(ranking),
+			Total: len(topkDocs),
 		}}
 	w.Header().Set("Content-Type", "application/json")
 	body, err := json.MarshalIndent(payload, "", "  ")
