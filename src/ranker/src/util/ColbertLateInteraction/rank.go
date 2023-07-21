@@ -25,7 +25,7 @@ func Rank(documents []*util.Document, query []util.Vector) []RankResultItem {
 
 func processDocument(document *util.Document, query []util.Vector, channel chan RankResultItem) {
 	var bestPassageId string = ""
-	// var bestPassageScore float64 = 0.0
+	var bestPassageScore float64 = 0.0
 
 	fullDocument := []util.Vector{}
 	for _, passage := range document.Passages {
@@ -33,13 +33,13 @@ func processDocument(document *util.Document, query []util.Vector, channel chan 
 	}
 	documentScore := GetScore(query, fullDocument)
 
-	// for _, passage := range document.Passages {
-	// 	score := GetScore(query, passage.Embeddings)
-	// 	if score > bestPassageScore {
-	// 		bestPassageScore = score
-	// 		bestPassageId = passage.PassageId
-	// 	}
-	// }
+	for _, passage := range document.Passages {
+		score := GetScore(query, passage.Embeddings)
+		if score > bestPassageScore {
+			bestPassageScore = score
+			bestPassageId = passage.PassageId
+		}
+	}
 
 	item := RankResultItem{
 		DocumentId:    document.DocId,
