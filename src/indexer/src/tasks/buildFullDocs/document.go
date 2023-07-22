@@ -12,23 +12,16 @@ type Passage struct {
 }
 
 type FullDocument struct {
-	DocId              string
-	Passages           []Passage
-	DocumentEmbeddings []core.Vector
+	DocId    string
+	Passages []Passage
 }
 
 func NewDocumentFromId(docId string) *FullDocument {
 	passages := getDocumentPassages(docId)
-	passageEmbeddings := make([][]core.Vector, len(passages))
-	for i, passage := range passages {
-		passageEmbeddings[i] = passage.Embeddings
-	}
-	fullDocVector := core.JoinEmbeddings(passageEmbeddings...)
 
 	return &FullDocument{
-		DocId:              docId,
-		Passages:           passages,
-		DocumentEmbeddings: fullDocVector,
+		DocId:    docId,
+		Passages: passages,
 	}
 }
 

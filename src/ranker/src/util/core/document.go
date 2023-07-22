@@ -12,9 +12,8 @@ type Passage struct {
 }
 
 type Document struct {
-	DocId              string
-	Passages           []Passage
-	DocumentEmbeddings []Vector
+	DocId    string
+	Passages []Passage
 }
 
 func (d Document) String() string {

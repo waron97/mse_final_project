@@ -31,7 +31,27 @@ func startDocWorker(tasks chan os.DirEntry, done chan bool) {
 func Build() {
 	fmt.Println("Building full docs...")
 	constants := core.GetConstants()
-	files, err := os.ReadDir(constants.StorageAverageDocsDir)
+
+	storedFiles, err := os.ReadDir(constants.StorageAverageDocsDir)
+	core.ErrPanic(err)
+
+	doneFiles, err := os.ReadDir(constants.StorageFullDocsDir)
+	core.ErrPanic(err)
+
+	doneFileNames := make([]string, len(doneFiles))
+	for i, file := range doneFiles {
+		doneFileNames[i] = file.Name()
+	}
+
+	files := make([]os.DirEntry, 0)
+
+	for _, file := range storedFiles {
+		if contains(doneFileNames, file.Name()) {
+			continue
+		}
+		files = append(files, file)
+	}
+
 	fmt.Println("Number of files to process:", len(files))
 	core.ErrPanic(err)
 
@@ -46,6 +66,9 @@ func Build() {
 
 	fmt.Println("Starting workers...")
 
+	go startDocWorker(tasks, done)
+	go startDocWorker(tasks, done)
+	go startDocWorker(tasks, done)
 	go startDocWorker(tasks, done)
 	go startDocWorker(tasks, done)
 	go startDocWorker(tasks, done)
