@@ -2,8 +2,8 @@ package core
 
 import (
 	"fmt"
-	"os"
 	"ranker/src/util/storage"
+	"time"
 )
 
 type Passage struct {
@@ -12,8 +12,9 @@ type Passage struct {
 }
 
 type Document struct {
-	DocId    string
-	Passages []*Passage
+	DocId              string
+	Passages           []Passage
+	DocumentEmbeddings []Vector
 }
 
 func (d Document) String() string {
@@ -21,10 +22,14 @@ func (d Document) String() string {
 }
 
 func NewDocumentFromId(docId string) *Document {
-	return &Document{
-		DocId:    docId,
-		Passages: getDocumentPassages(docId),
-	}
+	t := time.Now()
+	constants := GetConstants()
+	docPath := constants.StorageFullDocsDir + "/" + docId
+	var doc Document
+	storage.ReadStructFromFile(docPath, &doc)
+	elapsed := time.Since(t)
+	fmt.Println("Document loaded in", elapsed)
+	return &doc
 }
 
 func NewDocumentsFromIds(docIds []string) []*Document {
@@ -42,23 +47,4 @@ func NewDocumentsFromIds(docIds []string) []*Document {
 	}
 
 	return docs
-}
-
-func getDocumentPassages(docId string) []*Passage {
-	constants := GetConstants()
-	docPath := constants.StorageDocsDir + "/" + docId
-	files, err := os.ReadDir(docPath)
-	ErrPanic(err)
-	passages := make([]*Passage, len(files))
-	for i, file := range files {
-		var passageEmbeddings []Vector
-		var passageId string = file.Name()
-		storagePath := docPath + "/" + passageId
-		storage.ReadStructFromFile(storagePath, &passageEmbeddings)
-		passages[i] = &Passage{
-			PassageId:  passageId,
-			Embeddings: passageEmbeddings,
-		}
-	}
-	return passages
 }

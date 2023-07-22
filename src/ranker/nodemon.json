@@ -1,4 +1,5 @@
 {
   "exec": "go build -o ./app && ./app",
-  "ext": ".go"
+  "ext": ".go",
+  "watch": ["./src/**/*.go"]
 }

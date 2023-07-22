@@ -1,7 +1,10 @@
 package main
 
-import "ranker/src/app"
+import (
+	"ranker/src/app"
+)
 
 func main() {
+
 	app.RunTasks()
 }

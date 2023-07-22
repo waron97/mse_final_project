@@ -15,13 +15,14 @@ type Constants struct {
 	StorageAverageDocsDir string
 	StorageClustersDir    string
 	StorageClusterMapPath string
+	StorageFullDocsDir    string
 
 	ClusterCount int
 }
 
-func GetConstants() Constants {
+func GetConstants() *Constants {
 	const StorageBaseDir = "./offline-index"
-	return Constants{
+	return &Constants{
 		LogsAppName: os.Getenv("LOGS_APP_NAME"),
 		LogsApiKey:  os.Getenv("LOGS_KEY"),
 		AppEnv:      os.Getenv("APP_ENV"),
@@ -34,6 +35,7 @@ func GetConstants() Constants {
 		StorageAverageDocsDir: StorageBaseDir + "/average-documents",
 		StorageClustersDir:    StorageBaseDir + "/clusters",
 		StorageClusterMapPath: StorageBaseDir + "/clusters/clusterMap.index",
+		StorageFullDocsDir:    StorageBaseDir + "/full-docs",
 
 		ClusterCount: 100,
 	}

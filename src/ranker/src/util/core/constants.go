@@ -15,6 +15,7 @@ type Constants struct {
 	StorageAverageDocsDir string
 	StorageClustersDir    string
 	StorageClusterMapPath string
+	StorageFullDocsDir    string
 
 	ClusterCount int
 }
@@ -34,6 +35,7 @@ func GetConstants() Constants {
 		StorageAverageDocsDir: StorageBaseDir + "/average-documents",
 		StorageClustersDir:    StorageBaseDir + "/clusters",
 		StorageClusterMapPath: StorageBaseDir + "/clusters/clusterMap.index",
+		StorageFullDocsDir:    StorageBaseDir + "/full-docs",
 
 		ClusterCount: 100,
 	}
