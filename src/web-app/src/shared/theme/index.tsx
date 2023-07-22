@@ -2,7 +2,8 @@ import { ThemeProvider as StyledThemeProvider } from "styled-components";
 
 const theme = {
   colors: {
-    primary: "#0070f3",
+    textPrimary: "#000000",
+    textMuted: "#bbbbbb",
   },
   spacing: {},
 };

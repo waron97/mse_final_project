@@ -1,4 +1,4 @@
-import { Button, Card, Input, Pagination, Skeleton } from "antd";
+import { Button, Card, Divider, Input, Pagination, Skeleton } from "antd";
 import classNames from "classnames";
 import { FC, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -43,8 +43,6 @@ const _Search: FC<SearchProps> = (props) => {
     enabled: !!query,
   });
 
-  console.log(isFetching);
-
   // -------------------------------------
   // Effects
   // -------------------------------------
@@ -75,15 +73,11 @@ const _Search: FC<SearchProps> = (props) => {
   }
 
   function renderLoader() {
-    return (
-      <div className="results">
-        {Array(10)
-          .fill(true)
-          .map((_, index) => {
-            return <Skeleton key={index} active loading />;
-          })}
-      </div>
-    );
+    return Array(10)
+      .fill(true)
+      .map((_, index) => {
+        return <Skeleton key={index} active loading />;
+      });
   }
 
   function renderResults() {
@@ -91,7 +85,12 @@ const _Search: FC<SearchProps> = (props) => {
       return renderLoader();
     }
     return data?.data.map((document) => {
-      return <SearchResult document={document} />;
+      return (
+        <>
+          <SearchResult key={document.documentId} document={document} />
+          <Divider />
+        </>
+      );
     });
   }
 
@@ -104,7 +103,9 @@ const _Search: FC<SearchProps> = (props) => {
       <div className="main">
         <Card className="form-card">{renderSearchForm()}</Card>
         <Card className="results-card">
-          <div className="results">{renderResults()}</div>
+          <div className={classNames("results", { loading: isFetching })}>
+            {renderResults()}
+          </div>
           <div className="pagination">
             <Pagination
               current={page}
@@ -155,7 +156,9 @@ const Search = styled(_Search)<Theme>`
         .results {
           display: flex;
           flex-direction: column;
-          gap: 30px;
+          &.loading {
+            gap: 30px;
+          }
         }
         .pagination {
           display: flex;

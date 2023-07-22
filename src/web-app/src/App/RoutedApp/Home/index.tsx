@@ -1,4 +1,4 @@
-import { Button, Card, Input } from "antd";
+import { Button, Card, Input, Typography } from "antd";
 import classNames from "classnames";
 import { FC, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { Theme } from "@theme";
+
+const { Title, Paragraph } = Typography;
 
 // ----------------------------------------------------------------------------
 
@@ -42,16 +44,22 @@ const _Landing: FC<LandingProps> = (props) => {
 
   function renderSearchForm() {
     return (
-      <form onSubmit={handleSearch} className="search-form">
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Input your query"
-        ></Input>
-        <Button type="primary" shape="circle" htmlType="submit">
-          <AiOutlineSearch />
-        </Button>
-      </form>
+      <div>
+        <Title className="title">MSE</Title>
+        <Paragraph className="text">
+          Aron Winkler, Nino Meisinger, Qin Gu, Zhiyuan Liu
+        </Paragraph>
+        <form onSubmit={handleSearch} className="search-form">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Input your query"
+          ></Input>
+          <Button type="primary" shape="circle" htmlType="submit">
+            <AiOutlineSearch />
+          </Button>
+        </form>
+      </div>
     );
   }
 
@@ -82,6 +90,16 @@ const Landing = styled(_Landing)<Theme>`
     .main {
       max-width: 600px;
       width: 100%;
+
+      .title {
+        text-align: center;
+        margin-bottom: 6px;
+      }
+
+      .text {
+        text-align: center;
+        margin-bottom: 24px;
+      }
 
       .search-form {
         display: flex;
