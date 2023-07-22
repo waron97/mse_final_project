@@ -32,15 +32,32 @@ func NewDocumentFromId(docId string) *Document {
 	return &doc
 }
 
+func startDocumentGetter(tasks chan string, docs chan *Document) {
+	for {
+		task, ok := <-tasks
+		if !ok {
+			return
+		}
+		doc := NewDocumentFromId(task)
+		docs <- doc
+	}
+}
+
 func NewDocumentsFromIds(docIds []string) []*Document {
+	tasksChan := make(chan string, len(docIds))
 	docsChan := make(chan *Document)
 	docs := make([]*Document, len(docIds))
 
-	for i, docId := range docIds {
-		go func(i int, docId string) {
-			docsChan <- NewDocumentFromId(docId)
-		}(i, docId)
+	for _, docId := range docIds {
+		tasksChan <- docId
 	}
+
+	close(tasksChan)
+
+	go startDocumentGetter(tasksChan, docsChan)
+	go startDocumentGetter(tasksChan, docsChan)
+	go startDocumentGetter(tasksChan, docsChan)
+	go startDocumentGetter(tasksChan, docsChan)
 
 	for i := 0; i < len(docIds); i++ {
 		docs[i] = <-docsChan
