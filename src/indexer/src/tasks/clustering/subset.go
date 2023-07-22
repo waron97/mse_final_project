@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func getDocumentSubset(files []Document, count int) []Document {
+func getDocumentSubset(files []*Document, count int) []*Document {
 	numFiles := len(files)
 
 	source := rand.NewSource(time.Now().UnixNano())

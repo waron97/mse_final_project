@@ -85,21 +85,21 @@ services:
   #     - APP_ENV=${APP_ENV}
   #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
-  # indexer:
-  #   build: ./indexer
-  #   container_name: indexer
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - db
-  #   volumes:
-  #     - /Volumes/Aron's Hard Drive/mse/offline-index:/go/src/app/offline-index:rw
-  #     - ./indexer/src:/go/src/app/src:ro
-  #   environment:
-  #     - LOGS_APP_NAME=indexer
-  #     - APP_ENV=${APP_ENV}
-  #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
-  #     - MONGO_URI=mongodb://db:27017
+  indexer:
+    build: ./indexer
+    container_name: indexer
+    networks:
+      - app-network
+    depends_on:
+      - db
+    volumes:
+      - /Volumes/Aron's Hard Drive/mse/offline-index:/go/src/app/offline-index:rw
+      - ./indexer/src:/go/src/app/src:ro
+    environment:
+      - LOGS_APP_NAME=indexer
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://db:27017
 
   ranker:
     build: ./ranker

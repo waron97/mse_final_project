@@ -20,7 +20,7 @@ func getClosestCentroid(document core.Vector, centroids []core.Vector) int {
 	return centroidId
 }
 
-func clusterDocuments(documents []Document, clusters []core.Vector) {
+func clusterDocuments(documents []*Document, clusters []core.Vector) {
 	constants := core.GetConstants()
 	for _, doc := range documents {
 		centroidId := getClosestCentroid(doc.Embedding, clusters)

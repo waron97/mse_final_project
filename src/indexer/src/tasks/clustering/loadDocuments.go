@@ -12,12 +12,12 @@ type Document struct {
 	DocID     string
 }
 
-func loadDocuments() []Document {
+func loadDocuments() []*Document {
 	constants := core.GetConstants()
 	files, err := os.ReadDir(constants.StorageAverageDocsDir)
 	core.ErrPanic(err)
 
-	documents := make([]Document, len(files))
+	documents := make([]*Document, len(files))
 	for j, file := range files {
 		path := filepath.Join(constants.StorageAverageDocsDir, file.Name())
 
@@ -25,7 +25,7 @@ func loadDocuments() []Document {
 		err = storage.ReadStructFromFile(path, &emb)
 		core.ErrPanic(err)
 
-		documents[j] = Document{
+		documents[j] = &Document{
 			Embedding: emb,
 			DocID:     file.Name(),
 		}
@@ -33,7 +33,7 @@ func loadDocuments() []Document {
 	return documents
 }
 
-func getDocumentEmbeddings(documents []Document) []core.Vector {
+func getDocumentEmbeddings(documents []*Document) []core.Vector {
 	embeddings := make([]core.Vector, len(documents))
 	for j, doc := range documents {
 		embeddings[j] = doc.Embedding
