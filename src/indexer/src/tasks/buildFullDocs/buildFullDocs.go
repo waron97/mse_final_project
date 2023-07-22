@@ -76,7 +76,7 @@ func Build() {
 	for i := 0; i < len(files); i++ {
 		<-done
 		if i%100 == 0 && i != 0 {
-			fmt.Printf("Processed %d documents\n", i+1)
+			fmt.Printf("Processed %d documents\n", i)
 		}
 	}
 
