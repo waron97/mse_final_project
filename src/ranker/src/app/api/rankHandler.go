@@ -44,7 +44,7 @@ func RankHandler(w http.ResponseWriter, r *http.Request) {
 		queryEmbeddings := bert.GetEmbeddings(query)
 		core.MeasureTime(now, "BERT")
 
-		n := 100
+		n := 200
 		topk := prerank.Prerank(queryEmbeddings, clusters, n)
 		topk = topk[:n]
 
