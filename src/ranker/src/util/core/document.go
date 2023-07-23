@@ -1,8 +1,9 @@
 package core
 
 import (
+	"encoding/gob"
 	"fmt"
-	"ranker/src/util/storage"
+	"os"
 )
 
 type Passage struct {
@@ -22,9 +23,7 @@ func (d Document) String() string {
 func NewDocumentFromId(docId string) *Document {
 	constants := GetConstants()
 	docPath := constants.StorageFullDocsDir + "/" + docId
-	var doc Document
-	storage.ReadStructFromFile(docPath, &doc)
-	return &doc
+	return ReadDocument(docPath)
 }
 
 func startDocumentGetter(tasks chan string, docs chan *Document) {
@@ -85,4 +84,14 @@ func NewDocumentsFromIdsChan(docIds []string, out chan *Document) {
 	for i := 0; i < numWorkers; i++ {
 		go startDocumentsGetterChan(tasksChan, out)
 	}
+}
+
+func ReadDocument(filename string) *Document {
+	var document Document
+	file, err := os.Open(filename)
+	ErrPanic(err)
+	decoder := gob.NewDecoder(file)
+	err = decoder.Decode(&document)
+	ErrPanic(err)
+	return &document
 }
