@@ -3,14 +3,12 @@ package clustering
 import "indexer/src/util/core"
 
 type DocEmbedding struct {
-	DocId     string
-	Embedding core.Vector
+	DocId string
 }
 
-func NewDocEmbedding(docId string, embedding core.Vector) *DocEmbedding {
+func NewDocEmbedding(docId string) *DocEmbedding {
 	return &DocEmbedding{
-		DocId:     docId,
-		Embedding: embedding,
+		DocId: docId,
 	}
 }
 

@@ -30,7 +30,7 @@ func clusterDocuments(documents []*Document, clusters []core.Vector) {
 		}
 
 		centroidPath := constants.StorageClustersDir + "/centroid_" + strconv.Itoa(centroidId)
-		entry := NewDocEmbedding(doc.DocID, doc.Embedding)
+		entry := NewDocEmbedding(doc.DocID)
 
 		var centroidData []*DocEmbedding
 		err := storage.ReadStructFromFile(centroidPath, &centroidData)
