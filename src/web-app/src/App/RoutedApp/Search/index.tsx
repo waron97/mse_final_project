@@ -128,13 +128,14 @@ const Search = styled(_Search)<Theme>`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 50px 0px;
+    padding: 50px 12px;
     min-height: 100vh;
     overflow: hidden;
     flex-direction: column;
 
     .main {
       max-width: 600px;
+
       width: 100%;
       min-height: 100%;
       flex: 1;

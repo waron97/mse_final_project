@@ -83,7 +83,7 @@ const Landing = styled(_Landing)<Theme>`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 50px 0px;
+    padding: 50px 12px;
     width: 100vw;
     min-height: 100vh;
 
