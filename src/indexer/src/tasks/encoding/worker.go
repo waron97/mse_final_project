@@ -1,7 +1,6 @@
 package encoding
 
 import (
-	"fmt"
 	"indexer/src/util/bert"
 	"indexer/src/util/core"
 	"indexer/src/util/db"
@@ -19,9 +18,10 @@ func processDocument(task db.PageCrawl) {
 
 	encodedDocument := make([]core.Vector, 0)
 
-	for _, passage := range task.Passages {
+	passages := make([]Passage, len(task.Passages))
+
+	for i, passage := range task.Passages {
 		passageId := passage.ID.Hex()
-		passagePath := constants.StorageDocsDir + "/" + fmt.Sprintf("%s/%s", docId, passageId)
 		passageText := passage.Text
 
 		if len(passageText) == 0 {
@@ -32,8 +32,10 @@ func processDocument(task db.PageCrawl) {
 		if encoded == nil {
 			continue
 		}
-		err := storage.WriteStructToFile(passagePath, encoded)
-		core.ErrPanic(err)
+		passages[i] = Passage{
+			PassageId:  passageId,
+			Embeddings: encoded,
+		}
 		encodedDocument = append(encodedDocument, encoded...)
 	}
 
@@ -45,6 +47,13 @@ func processDocument(task db.PageCrawl) {
 	core.ErrPanic(err)
 
 	err = storage.WriteStructToFile(avgDocPath, avgEmb)
+	core.ErrPanic(err)
+
+	storedDocument := StoredDocument{
+		DocId:    docId,
+		Passages: passages,
+	}
+	err = storage.WriteStructToFile(docPath, storedDocument)
 	core.ErrPanic(err)
 
 	db.MarkPageIndexed(task.ID.Hex())

@@ -1,4 +1,4 @@
-package buildfulldocs
+package encoding
 
 import (
 	"indexer/src/util/core"
@@ -11,23 +11,23 @@ type Passage struct {
 	Embeddings []core.Vector
 }
 
-type FullDocument struct {
+type StoredDocument struct {
 	DocId    string
 	Passages []Passage
 }
 
-func NewDocumentFromId(docId string) *FullDocument {
+func NewDocumentFromId(docId string) *StoredDocument {
 	passages := getDocumentPassages(docId)
 
-	return &FullDocument{
+	return &StoredDocument{
 		DocId:    docId,
 		Passages: passages,
 	}
 }
 
-func NewDocumentsFromIds(docIds []string) []*FullDocument {
-	docsChan := make(chan *FullDocument)
-	docs := make([]*FullDocument, len(docIds))
+func NewDocumentsFromIds(docIds []string) []*StoredDocument {
+	docsChan := make(chan *StoredDocument)
+	docs := make([]*StoredDocument, len(docIds))
 
 	for i, docId := range docIds {
 		go func(i int, docId string) {
