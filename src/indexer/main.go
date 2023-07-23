@@ -8,6 +8,9 @@ import (
 
 func main() {
 	storage.CreateStorageDirs()
-	encoding.RunEncodingTask()
-	clustering.RunClusteringTask()
+	doRun := false
+	if doRun {
+		encoding.RunEncodingTask()
+		clustering.RunClusteringTask()
+	}
 }
