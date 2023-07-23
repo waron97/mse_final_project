@@ -20,6 +20,7 @@ func RunClusteringTask() {
 		for _, row := range data {
 			centroids = append(centroids, row.Centroid)
 		}
+		fmt.Println("Centroids loaded from disc")
 	} else {
 		centroids = cluster(getDocumentEmbeddings(documents), constants.ClusterCount)
 		fmt.Println("Centroids found")
