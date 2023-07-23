@@ -109,7 +109,7 @@ services:
     depends_on:
       - db
     volumes:
-      - /Volumes/Aron's Hard Drive/mse/offline-index:/go/src/app/offline-index:rw
+      - ./offline-index:/go/src/app/offline-index:rw
       - ./ranker/src:/go/src/app/src:ro
     ports:
       - "3005:5000"
