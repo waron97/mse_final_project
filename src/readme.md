@@ -6,6 +6,8 @@ Commands are provided for Linux and MacOS systems, but the engine can be run on 
 
 After ensuring that Docker is installed and active on the host machine, the first step should be to launch the data collection routine. In practice, this means starting the `db`, `crawler` and `frontier-acceptor` services.
 
+Before starting, please create a `.env` file in the `src` directory with the contents of the `.env.example` file, also found in the same folder. For local execution, the default values should be sufficient. Without this step, many containers will fail to start.
+
 For Linux and MacOS users, this can be achieved with the provided bash script:
 
 ```bash
