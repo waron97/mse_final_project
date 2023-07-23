@@ -1,7 +1,6 @@
 package encoding
 
 import (
-	"encoding/json"
 	"indexer/src/util/bert"
 	"indexer/src/util/core"
 	"indexer/src/util/db"
@@ -14,7 +13,6 @@ func processDocument(task db.PageCrawl) {
 	constants := core.GetConstants()
 	avgDocPath := constants.StorageAverageDocsDir + "/" + docId
 	docPath := constants.StorageDocsDir + "/" + docId
-	jsonDocPath := constants.StorageJsonDocsDir + "/" + docId + ".json"
 
 	os.MkdirAll(docPath, os.ModePerm)
 
@@ -56,10 +54,6 @@ func processDocument(task db.PageCrawl) {
 		Passages: passages,
 	}
 	err = storage.WriteStructToFile(docPath, storedDocument)
-	core.ErrPanic(err)
-	jsonDoc, err := json.MarshalIndent(storedDocument, "", " ")
-	core.ErrPanic(err)
-	err = os.WriteFile(jsonDocPath, jsonDoc, os.ModePerm)
 	core.ErrPanic(err)
 
 	db.MarkPageIndexed(task.ID.Hex())
