@@ -37,53 +37,53 @@ services:
       - ./mongodata:/data/db
     command: --logpath /dev/null
 
-  # frontier-acceptor:
-  #   build: ./frontier-acceptor
-  #   container_name: frontier-acceptor
-  #   restart: always
-  #   ports:
-  #     - "8080:3000"
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - db
-  #   volumes:
-  #     - ./frontier-acceptor/src:/usr/app/src:ro
-  #   environment:
-  #     - LOGS_APP_NAME=frontier-acceptor
-  #     - APP_ENV=${APP_ENV}
-  #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
-  #     - MONGO_URI=mongodb://db:27017
+  frontier-acceptor:
+    build: ./frontier-acceptor
+    container_name: frontier-acceptor
+    restart: always
+    ports:
+      - "8080:3000"
+    networks:
+      - app-network
+    depends_on:
+      - db
+    volumes:
+      - ./frontier-acceptor/src:/usr/app/src:ro
+    environment:
+      - LOGS_APP_NAME=frontier-acceptor
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - MONGO_URI=mongodb://db:27017
 
-  # crawler:
-  #   build: ./crawler
-  #   container_name: crawler
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - frontier-acceptor
-  #   environment:
-  #     - LOGS_APP_NAME=crawler
-  #     - APP_ENV=${APP_ENV}
-  #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+  crawler:
+    build: ./crawler
+    container_name: crawler
+    networks:
+      - app-network
+    depends_on:
+      - frontier-acceptor
+    environment:
+      - LOGS_APP_NAME=crawler
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
-  # bert:
-  #   build: ./bert
-  #   container_name: bert
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - ./bert/app:/usr/app/app:ro
-  #     - ./bert/out:/usr/app/out:rw
-  #     - ./bert-cache:/root/.cache:rw
-  #   ports:
-  #     - "6000:5000"
-  #   environment:
-  #     - BERT_MODEL=distilbert-base-multilingual-cased
-  #     - MAX_QUERY_SIZE=50
-  #     - LOGS_APP_NAME=bert
-  #     - APP_ENV=${APP_ENV}
-  #     - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+  bert:
+    build: ./bert
+    container_name: bert
+    networks:
+      - app-network
+    volumes:
+      - ./bert/app:/usr/app/app:ro
+      - ./bert/out:/usr/app/out:rw
+      - ./bert-cache:/root/.cache:rw
+    ports:
+      - "6000:5000"
+    environment:
+      - BERT_MODEL=distilbert-base-multilingual-cased
+      - MAX_QUERY_SIZE=50
+      - LOGS_APP_NAME=bert
+      - APP_ENV=${APP_ENV}
+      - LOGS_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
 
   indexer:
     build: ./indexer
