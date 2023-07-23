@@ -29,7 +29,7 @@ func GetConstants() Constants {
 		AppEnv:      os.Getenv("APP_ENV"),
 		MongoUri:    os.Getenv("MONGO_URI"),
 		LogsUrl:     "http://logs:8080",
-		BertUri:     "http://host.docker.internal:8888",
+		BertUri:     "http://bert:5000",
 
 		StorageBaseDir:        StorageBaseDir,
 		StorageDocsDir:        StorageBaseDir + "/documents",

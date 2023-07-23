@@ -138,7 +138,7 @@ def __remove_elements_by_index(embeddings, positions):
 
 
 if __name__ == "__main__":
-    app.run(port=8888, host="0.0.0.0")
+    app.run(port=5000, host="0.0.0.0")
 
     # ### Check when "type" is "document"
     # BERT_MODEL = "bert-base-uncased"

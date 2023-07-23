@@ -22,7 +22,7 @@ func (d Document) String() string {
 
 func NewDocumentFromId(docId string) *Document {
 	constants := GetConstants()
-	docPath := constants.StorageFullDocsDir + "/" + docId
+	docPath := constants.StorageDocsDir + "/" + docId
 	return ReadDocument(docPath)
 }
 

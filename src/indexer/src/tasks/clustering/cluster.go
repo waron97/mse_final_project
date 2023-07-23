@@ -7,11 +7,16 @@ import (
 )
 
 func RunClusteringTask() {
-	fmt.Println("Running clustering task")
+	fmt.Println("[RunClusteringTask] Running clustering task")
 	constants := core.GetConstants()
 	documents := loadDocuments()
-	fmt.Println("Documents loaded", len(documents))
+	fmt.Println("[RunClusteringTask] Documents loaded", len(documents))
 	documents = getDocumentSubset(documents, len(documents))
+
+	if len(documents) < 1000 {
+		fmt.Println("[RunClusteringTask] Not enough documents to cluster")
+		return
+	}
 
 	var centroids []core.Vector
 
@@ -20,13 +25,13 @@ func RunClusteringTask() {
 		for _, row := range data {
 			centroids = append(centroids, row.Centroid)
 		}
-		fmt.Println("Centroids loaded from disc")
+		fmt.Println("[RunClusteringTask] Centroids loaded from disc")
 	} else {
 		centroids = cluster(getDocumentEmbeddings(documents), constants.ClusterCount)
-		fmt.Println("Centroids found")
+		fmt.Println("[RunClusteringTask] Centroids found")
 		writeClusterMap(centroids)
 	}
 
 	clusterDocuments(documents, centroids)
-	fmt.Println("Documents clustered")
+	fmt.Println("[RunClusteringTask] Documents clustered")
 }
