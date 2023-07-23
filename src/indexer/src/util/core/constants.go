@@ -16,6 +16,7 @@ type Constants struct {
 	StorageClustersDir    string
 	StorageClusterMapPath string
 	StorageFullDocsDir    string
+	StorageJsonDocsDir    string
 
 	ClusterCount int
 }
@@ -36,6 +37,7 @@ func GetConstants() *Constants {
 		StorageClustersDir:    StorageBaseDir + "/clusters",
 		StorageClusterMapPath: StorageBaseDir + "/clusters/clusterMap.index",
 		StorageFullDocsDir:    StorageBaseDir + "/full-docs",
+		StorageJsonDocsDir:    StorageBaseDir + "/json-docs",
 
 		ClusterCount: 100,
 	}

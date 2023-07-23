@@ -7,13 +7,13 @@ import (
 )
 
 type Passage struct {
-	PassageId  string
-	Embeddings []core.Vector
+	PassageId  string        `json:"passageId"`
+	Embeddings []core.Vector `json:"embeddings"`
 }
 
 type StoredDocument struct {
-	DocId    string
-	Passages []Passage
+	DocId    string    `json:"docId"`
+	Passages []Passage `json:"passages"`
 }
 
 func NewDocumentFromId(docId string) *StoredDocument {

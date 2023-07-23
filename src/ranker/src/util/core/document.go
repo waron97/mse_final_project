@@ -84,7 +84,7 @@ func NewDocumentsFromIdsChan(docIds []string, out chan *Document) {
 
 	close(tasksChan)
 
-	numWorkers := 20
+	numWorkers := 5
 	for i := 0; i < numWorkers; i++ {
 		go startDocumentsGetterChan(tasksChan, out)
 	}
