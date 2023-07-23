@@ -23,6 +23,34 @@ func Rank(documents []*util.Document, query []util.Vector) []RankResultItem {
 	return result
 }
 
+func RankChan(documents chan *util.Document, docsCount int, query []util.Vector) []RankResultItem {
+	var result []RankResultItem
+	channel := make(chan RankResultItem)
+
+	numWorkers := 10
+	for i := 0; i < numWorkers; i++ {
+		go startDocumentWorker(documents, query, channel)
+	}
+
+	for i := 0; i < docsCount; i++ {
+		doc := <-channel
+		result = append(result, doc)
+	}
+
+	sort.Sort(sort.Reverse(ByDocumentScore(result)))
+	return result
+}
+
+func startDocumentWorker(documents chan *util.Document, query []util.Vector, channel chan RankResultItem) {
+	for {
+		document, ok := <-documents
+		if !ok {
+			return
+		}
+		processDocument(document, query, channel)
+	}
+}
+
 func processDocument(document *util.Document, query []util.Vector, channel chan RankResultItem) {
 	var bestPassageId string = ""
 	var bestPassageScore float64 = 0.0

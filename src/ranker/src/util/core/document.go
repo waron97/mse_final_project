@@ -21,13 +21,10 @@ func (d Document) String() string {
 }
 
 func NewDocumentFromId(docId string) *Document {
-	t := time.Now()
 	constants := GetConstants()
 	docPath := constants.StorageFullDocsDir + "/" + docId
 	var doc Document
 	storage.ReadStructFromFile(docPath, &doc)
-	elapsed := time.Since(t)
-	fmt.Println("Document loaded in", elapsed)
 	return &doc
 }
 
@@ -63,4 +60,32 @@ func NewDocumentsFromIds(docIds []string) []*Document {
 	}
 
 	return docs
+}
+
+func startDocumentsGetterChan(tasks chan string, docs chan *Document) {
+	for {
+		task, ok := <-tasks
+		if !ok {
+			return
+		}
+		n := time.Now()
+		doc := NewDocumentFromId(task)
+		fmt.Println("Doc loaded in", time.Since(n))
+		docs <- doc
+	}
+}
+
+func NewDocumentsFromIdsChan(docIds []string, out chan *Document) {
+	tasksChan := make(chan string, len(docIds))
+
+	for _, docId := range docIds {
+		tasksChan <- docId
+	}
+
+	close(tasksChan)
+
+	numWorkers := 20
+	for i := 0; i < numWorkers; i++ {
+		go startDocumentsGetterChan(tasksChan, out)
+	}
 }

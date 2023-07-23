@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"ranker/src/util/ColbertLateInteraction"
 	"ranker/src/util/bert"
@@ -42,12 +43,20 @@ func RankHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		queryEmbeddings := bert.GetEmbeddings(query)
 		core.MeasureTime(now, "BERT")
+
 		topk := prerank.Prerank(queryEmbeddings, clusters, 100)
-		core.MeasureTime(now, "Prerank")
-		topkDocs := core.NewDocumentsFromIds(topk)
-		core.MeasureTime(now, "NewDocumentsFromIds")
-		ranking = ColbertLateInteraction.Rank(topkDocs, queryEmbeddings)
+		core.MeasureTime(now, fmt.Sprintf("Preranked documents %d", len(topk)))
+
+		// Load documents from disk, at most 4 at a time
+		// to prevent running out of RAM
+		topkDocs := make(chan *core.Document, 50)
+		go core.NewDocumentsFromIdsChan(topk, topkDocs)
+		core.MeasureTime(now, "NewDocumentsFromIds started")
+
+		// Process documents as they come in
+		ranking = ColbertLateInteraction.RankChan(topkDocs, len(topk), queryEmbeddings)
 		core.MeasureTime(now, "ColbertLateInteraction")
+
 		responseCache.Set(query, ranking)
 	}
 	numDocs := len(ranking)
