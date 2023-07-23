@@ -3,7 +3,6 @@ package core
 import (
 	"fmt"
 	"ranker/src/util/storage"
-	"time"
 )
 
 type Passage struct {
@@ -68,9 +67,7 @@ func startDocumentsGetterChan(tasks chan string, docs chan *Document) {
 		if !ok {
 			return
 		}
-		n := time.Now()
 		doc := NewDocumentFromId(task)
-		fmt.Println("Doc loaded in", time.Since(n))
 		docs <- doc
 	}
 }
