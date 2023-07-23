@@ -5,7 +5,6 @@ import (
 	"indexer/src/util/core"
 	"indexer/src/util/db"
 	"indexer/src/util/storage"
-	"os"
 )
 
 func processDocument(task db.PageCrawl) {
@@ -13,8 +12,6 @@ func processDocument(task db.PageCrawl) {
 	constants := core.GetConstants()
 	avgDocPath := constants.StorageAverageDocsDir + "/" + docId
 	docPath := constants.StorageDocsDir + "/" + docId
-
-	os.MkdirAll(docPath, os.ModePerm)
 
 	encodedDocument := make([]core.Vector, 0)
 
