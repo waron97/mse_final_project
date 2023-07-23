@@ -4,14 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"ranker/src/app/api"
-	"ranker/src/util/core"
 
 	"github.com/rs/cors"
 )
 
 func RunTasks() {
-	doc := core.NewDocumentFromId("64b7ef444db6e0d1c693764e")
-	fmt.Println("DocID", doc.DocId)
 
 	handler := http.NewServeMux()
 	handler.HandleFunc("/rank", api.RankHandler)
