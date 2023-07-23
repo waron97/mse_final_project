@@ -37,8 +37,12 @@ func clusterDocuments(documents []*Document, clusters []core.Vector) {
 		if err != nil {
 			centroidData = make([]*DocEmbedding, 0)
 		}
-		centroidData = append(centroidData, entry)
-		err = storage.WriteStructToFile(centroidPath, centroidData)
-		core.ErrPanic(err)
+
+		if !centroidContains(centroidData, doc.DocID) {
+			centroidData = append(centroidData, entry)
+			err = storage.WriteStructToFile(centroidPath, centroidData)
+			core.ErrPanic(err)
+		}
+
 	}
 }

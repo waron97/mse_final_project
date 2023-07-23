@@ -13,3 +13,9 @@ func NewDocEmbedding(docId string, embedding core.Vector) *DocEmbedding {
 		Embedding: embedding,
 	}
 }
+
+type Cluster struct {
+	ID        int
+	Centroid  core.Vector
+	Documents []string
+}
