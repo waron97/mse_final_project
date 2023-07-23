@@ -112,6 +112,7 @@ const _Search: FC<SearchProps> = (props) => {
               total={data?.meta?.total}
               onChange={(pag) => setPage(pag)}
               showSizeChanger={false}
+              pageSize={20}
             />
           </div>
         </Card>
