@@ -20,9 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@components": ["src/shared/components"],
-      "@hooks": ["src/shared/hooks"],
-      "@theme": ["src/shared/theme"]
+      "@components": ["./src/shared/components"],
+      "@hooks": ["./src/shared/hooks"],
+      "@theme": ["./src/shared/theme"]
     }
   },
   "include": ["src"],
