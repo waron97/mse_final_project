@@ -30,7 +30,7 @@ def process_text():
     text = request.json["text"]
     try:
         if request.json["type"] == 'query':
-            result = get_bert_embedding_query(text)
+            result = get_bert_embedding_document(text)
         elif request.json["type"] == 'document':
             result = get_bert_embedding_document(text)
         return jsonify({"embeddings": result})
