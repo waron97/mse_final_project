@@ -12,6 +12,7 @@ func RunTasks() {
 
 	handler := http.NewServeMux()
 	handler.HandleFunc("/rank", api.RankHandler)
+	handler.HandleFunc("/rankAll", api.RankAllHandler)
 	handler.HandleFunc("/health", api.HealthHandler)
 
 	server := &http.Server{

@@ -79,3 +79,52 @@ func RankHandler(w http.ResponseWriter, r *http.Request) {
 	core.ErrPanic(err)
 	w.Write(body)
 }
+
+func RankAllHandler(w http.ResponseWriter, r *http.Request) {
+	now := time.Now()
+	query := r.URL.Query().Get("query")
+	if query == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Query is empty"))
+		return
+	}
+	var ranking []ColbertLateInteraction.RankResultItem
+	if cachedItem, ok := responseCache.Get(query); ok {
+		ranking = cachedItem.([]ColbertLateInteraction.RankResultItem)
+		core.MeasureTime(now, "Cache")
+	} else {
+		queryEmbeddings := bert.GetEmbeddings(query)
+		core.MeasureTime(now, "BERT")
+
+		n := 200
+		topk := prerank.Prerank(queryEmbeddings, clusters, n)
+		topk = topk[:n]
+
+		core.MeasureTime(now, fmt.Sprintf("Preranked documents %d", len(topk)))
+
+		// Load documents from disk, at most 4 at a time
+		// to prevent running out of RAM
+		topkDocs := make(chan *core.Document, 50)
+		go core.NewDocumentsFromIdsChan(topk, topkDocs)
+		core.MeasureTime(now, "NewDocumentsFromIds started")
+
+		// Process documents as they come in
+		ranking = ColbertLateInteraction.RankChan(topkDocs, len(topk), queryEmbeddings)
+		core.MeasureTime(now, "ColbertLateInteraction")
+
+		responseCache.Set(query, ranking)
+	}
+	numDocs := len(ranking)
+
+	mapped := networking.MapRankingResults(ranking)
+	core.MeasureTime(now, "MapRankingResults")
+	payload := RankResponse{
+		Data: mapped,
+		Meta: RankMeta{
+			Total: numDocs,
+		}}
+	w.Header().Set("Content-Type", "application/json")
+	body, err := json.MarshalIndent(payload, "", "  ")
+	core.ErrPanic(err)
+	w.Write(body)
+}
