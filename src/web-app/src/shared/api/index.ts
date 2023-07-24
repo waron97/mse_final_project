@@ -2,7 +2,7 @@ import { Paginated, SearchResult } from "./types";
 
 export function getBaseUrl() {
   if (import.meta.env.PROD) {
-    return "https://19a0-46-5-255-94.ngrok-free.app";
+    return "https://2799-134-2-251-1.ngrok-free.app";
   }
   return "http://localhost:3005";
 }
