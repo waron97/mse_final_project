@@ -96,10 +96,7 @@ func RankAllHandler(w http.ResponseWriter, r *http.Request) {
 		queryEmbeddings := bert.GetEmbeddings(query)
 		core.MeasureTime(now, "BERT")
 
-		n := 200
-		topk := prerank.Prerank(queryEmbeddings, clusters, n)
-		topk = topk[:n]
-
+		topk := prerank.Prerank(queryEmbeddings, clusters, 300)
 		core.MeasureTime(now, fmt.Sprintf("Preranked documents %d", len(topk)))
 
 		// Load documents from disk, at most 4 at a time
