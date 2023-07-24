@@ -30,7 +30,7 @@ def process_text():
     text = request.json["text"]
     try:
         if request.json["type"] == 'query':
-            result = get_bert_embedding_document(text)
+            result = get_bert_embedding_query(text)
         elif request.json["type"] == 'document':
             result = get_bert_embedding_document(text)
         return jsonify({"embeddings": result})
@@ -50,8 +50,8 @@ def get_bert_embedding_query(text):
         text,
         add_special_tokens=True,
         return_tensors='pt',
-        max_length=MAX_QUERY_SIZE,
-        padding='max_length',
+        max_length=20,
+        padding='do_not_pad',
         truncation=True,
         verbose=True,
     )
